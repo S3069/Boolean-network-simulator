@@ -29,7 +29,7 @@ def inputNodes():
 
         ttables[node_letter] = {
             "neighbours": node_neighbourhood,
-            "truthtable": node_ttable
+            "truthtable": int(node_ttable, 2)
         }
 
     return ttables
