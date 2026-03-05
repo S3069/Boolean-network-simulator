@@ -32,7 +32,35 @@ def inputNodes():
             "truthtable": node_ttable_hex
         }
 
-    print(ttables)
+    return ttables
 
+def nextNodeState(node, current_g_state, ttables):
+    # node is the letter we are calculating the next state for
+    # state represents whether the node is on or off
 
-inputNodes()
+    # This function should calculate, based on the node's truthtable of neighbours, what the next state of the node should be
+    pass
+
+def nextGlobalState(ttables):
+    # This function should calculate the next global state, based on the current global state.
+    # It calls nextNodeState for each letter, passing in this current global state each time
+    
+    # Alphabetical node order used
+    node_order = sorted(ttables.keys())
+
+    current_g_state = input(f"\nWhat is the initial global state for {"".join(node_order)}? ").replace(" ", "").replace(",", "").strip()
+    
+    # Find next state of each node
+    next_g_state = []
+    for node in node_order:
+        next_g_state.append(nextNodeState(node, current_g_state, ttables))
+
+    # Compile and return next global state
+    print(f"{"".join(node_order)}: ({current_g_state}) -> ({next_g_state})")
+    return next_g_state
+
+def main():
+    ttables = inputNodes()
+    nextGlobalState(ttables)
+
+main()
