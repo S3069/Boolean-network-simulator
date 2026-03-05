@@ -1,1 +1,2 @@
-Harsher input validation (many components)
+Harsher input validation and error handling (every function)
+Shall I force each character of the neighbourhood to become a separated neighbour? Yes

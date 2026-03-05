@@ -1,4 +1,0 @@
-in function inputNodes():
-
-.replace(" ", "") from https://stackoverflow.com/a/8270146
-comma-separated tuple from https://bobbyhadz.com/blog/python-input-tuple
