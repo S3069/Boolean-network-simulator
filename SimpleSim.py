@@ -51,7 +51,7 @@ def nextNodeState(node, current_g_state, ttables, node_order):
     new_state = ttables[node]["truthtable"][index]
 
     # test print
-    print(f"{node} is now {new_state}")
+    print(f"Test print: {node} is now {new_state}")
 
     return new_state
 
@@ -64,14 +64,16 @@ def nextGlobalState(ttables):
 
     current_g_state = input(f"\nWhat is the initial global state for {"".join(node_order)}? ").replace(" ", "").replace(",", "").strip()
     
-    # Find next state of each node
+    # Find next state of each node and compile
     next_g_states = []
     for node in node_order:
         next_g_states.append(nextNodeState(node, current_g_state, ttables, node_order))
     next_g_state = "".join(next_g_states)
 
-    # Compile and return next global state
+    # Test print
     print(f"{"".join(node_order)}: ({current_g_state}) -> ({next_g_state})")
+
+    # return next global state
     return next_g_state
 
 def main():
