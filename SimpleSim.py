@@ -65,9 +65,10 @@ def nextGlobalState(ttables):
     current_g_state = input(f"\nWhat is the initial global state for {"".join(node_order)}? ").replace(" ", "").replace(",", "").strip()
     
     # Find next state of each node
-    next_g_state = []
+    next_g_states = []
     for node in node_order:
-        next_g_state.append(nextNodeState(node, current_g_state, ttables, node_order))
+        next_g_states.append(nextNodeState(node, current_g_state, ttables, node_order))
+    next_g_state = "".join(next_g_states)
 
     # Compile and return next global state
     print(f"{"".join(node_order)}: ({current_g_state}) -> ({next_g_state})")
