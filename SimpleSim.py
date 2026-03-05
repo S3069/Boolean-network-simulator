@@ -2,20 +2,35 @@
 def inputNodes():
     num_nodes = int(input("How many nodes? "))
 
-    truthtables = []
-    print("Please enter the Boolean tables in the format: node_letter, neighbour,neighbour, (truthtable). \nOnly enter the truthtable outputs.")
+    ttables = {}
+    print("Enter the Boolean tables in the format: node_letter, neighbour,neighbour (comma separated), Boolean truthtable (e.g. 1001).")
 
     for num in range(0,num_nodes):
 
         print("\nNode {}".format(num))
-        node_letter = input("Letter: ")
-        node_neighbourhood = input("Neighbourhood: ")
-        node_truthtable = input("Truthtable: ")
+        node_letter = input("Letter: ").upper()
 
-        new_node = node_letter + node_neighbourhood + node_truthtable
-        truthtables.append(new_node)
+        # Split neighbourhood into tuple
+        node_neighbourhood = tuple(input("Neighbourhood: ").upper().split(","))
 
-    print(truthtables)
+        ttable_len_pass = False
+        while(not ttable_len_pass):
+            node_ttable = input("Truthtable: ").replace(" ", "").replace(",", "")
+
+            # Validate the truthtable matches length of neighbourhood
+            expected_length = 2**len(node_neighbourhood)
+            if len(node_ttable) == expected_length:
+                ttable_len_pass = True
+            else:
+                print(f"The truthtable does not match expected length for {len(node_neighbourhood)} neighbours.")
+
+        ttables[node_letter] = {
+            "neighbours": node_neighbourhood,
+            "truthtable": node_ttable
+        }
+
+
+    print(ttables)
 
 
 inputNodes()
