@@ -1,3 +1,5 @@
+import os
+os.environ["PATH"] += os.pathsep + r"C:\Program Files (x86)\Graphviz\bin"
 import graphviz
 
 def manualInputNodes():
