@@ -10,3 +10,7 @@ sorting dictionary by keys from https://stackoverflow.com/questions/9001509/how-
 in linkAllStates:
 convert int to binary using bin(x)[2:] from https://www.geeksforgeeks.org/python/bin-in-python/
 padding Boolean strings using zfill from https://stackabuse.com/bytes/add-leading-zeros-to-a-number-in-python/
+
+in drawStateGraph:
+graphviz commands from https://graphviz.readthedocs.io/en/stable/manual.html
+dictionary.items() command from https://www.w3schools.com/python/ref_dictionary_items.asp
