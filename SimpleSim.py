@@ -1,3 +1,4 @@
+import graphviz
 
 def manualInputNodes():
     num_nodes = int(input("How many nodes? "))
@@ -111,15 +112,30 @@ def allStateTransitions(ttables):
             
     return state_trans
 
+def drawStateGraph(state_trans):
+
+    dot = graphviz.Digraph(comment='State Transition Graph') 
+
+    for state in state_trans:
+        dot.node(state)
+
+    for state, next_state in state_trans.items():
+        dot.edge(state, next_state)
+
+    dot.render(format='png', view=True)
+
+    return dot
+
 '''
 def runAllTraces(ttables):
     num_nodes = len(ttables)
+    num_states = 2 ** num_nodes
 
-    searched = []
+    all_traces = {}
 
-    if len(searched) != num_nodes:
-        for i in num_nodes-1:
-            bin_state = int(i, 2)
+    for i in range(num_states):
+        # Need to convert to binary state with leading zeros to match length of global states
+        bin_state = bin(i)[2:].zfill(num_nodes)
 
 
     return all_traces
@@ -132,8 +148,8 @@ def main():
     print("Truthtable of all nodes: ", ttables)
 
     state_trans = allStateTransitions(ttables)
-    print("State transitions: ", state_trans)
 
-    #nextGlobalState(ttables)
+    dot = drawStateGraph(state_trans)
+
 
 main()
