@@ -1,5 +1,5 @@
 
-def inputNodes():
+def manualInputNodes():
     num_nodes = int(input("How many nodes? "))
 
     ttables = {}
@@ -31,6 +31,32 @@ def inputNodes():
             "neighbours": node_neighbourhood,
             "truthtable": node_ttable
         }
+
+    return ttables
+
+def fileInputNodes(filename):
+    ttables = {}
+
+    with open(filename, "r") as file:
+        for line in file:
+            line = line.strip()
+
+            # Do a check here for an empty line
+            
+            node_letter, node_neighbourhood, node_ttable = line.split(",")
+
+            node_letter = node_letter.upper().strip()
+            node_neighbourhood = tuple(node_neighbourhood.upper().strip().split())
+
+            # Validate the truthtable matches length of neighbourhood
+            expected_length = 2**len(node_neighbourhood)
+            if len(node_ttable) != expected_length:
+                print(f"The truthtable does not match expected length for {len(node_neighbourhood)} neighbours.")
+
+            ttables[node_letter] = {
+                "neighbours": node_neighbourhood,
+                "truthtable": node_ttable
+            }
 
     return ttables
 
@@ -77,7 +103,11 @@ def nextGlobalState(ttables):
     return next_g_state
 
 def main():
-    ttables = inputNodes()
-    nextGlobalState(ttables)
+    filename = 'ExampleBoolNet1.txt'
+
+    ttables = fileInputNodes(filename)
+    print(ttables)
+
+    #nextGlobalState(ttables)
 
 main()
