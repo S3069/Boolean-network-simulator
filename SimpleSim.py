@@ -82,14 +82,12 @@ def nextNodeState(node, current_g_state, ttables, node_order):
 
     return new_state
 
-def nextGlobalState(ttables):
-    # This function should calculate the next global state, based on the current global state.
+def nextGlobalState(ttables, current_g_state):
+    # This function calculates the next global state based on the current global state.
     # It calls nextNodeState for each letter, passing in this current global state each time
     
     # Alphabetical node order used
     node_order = sorted(ttables.keys())
-
-    current_g_state = input(f"\nWhat is the initial global state for {"".join(node_order)}? ").replace(" ", "").replace(",", "").strip()
     
     # Find next state of each node and compile
     next_g_states = []
@@ -97,11 +95,26 @@ def nextGlobalState(ttables):
         next_g_states.append(nextNodeState(node, current_g_state, ttables, node_order))
     next_g_state = "".join(next_g_states)
 
-    # Test print
-    print(f"{"".join(node_order)}: ({current_g_state}) -> ({next_g_state})")
-
     # return next global state
     return next_g_state
+
+def linkAllStates(ttables):
+    num_nodes = len(ttables)
+    num_states = 2 ** num_nodes
+
+    state_links = {}
+
+    for i in range(num_states):
+        # Need to convert to binary state with leading zeros to match length of global states
+        bin_state = int(i, 2)
+
+        next_state = nextGlobalState(ttables, bin_state)
+        
+        state_links[bin_state] = next_state
+            
+    return state_links
+
+
 
 def main():
     filename = 'ExampleBoolNet1.txt'
