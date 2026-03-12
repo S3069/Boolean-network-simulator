@@ -41,7 +41,7 @@ def fileInputNodes(filename):
         for line in file:
             line = line.strip()
 
-            if line(line) == 0:
+            if len(line) == 0:
                 continue
             
             node_letter, node_neighbourhood, node_ttable = line.split(",")
@@ -77,9 +77,6 @@ def nextNodeState(node, current_g_state, ttables, node_order):
     # Find this node's state using the truth table
     new_state = ttables[node]["truthtable"][index]
 
-    # test print
-    print(f"Test print: {node} is now {new_state}")
-
     return new_state
 
 def nextGlobalState(ttables, current_g_state):
@@ -106,7 +103,7 @@ def linkAllStates(ttables):
 
     for i in range(num_states):
         # Need to convert to binary state with leading zeros to match length of global states
-        bin_state = int(i, 2)
+        bin_state = bin(i)[2:].zfill(num_nodes)
 
         next_state = nextGlobalState(ttables, bin_state)
         
@@ -120,7 +117,10 @@ def main():
     filename = 'ExampleBoolNet1.txt'
 
     ttables = fileInputNodes(filename)
-    print(ttables)
+    print("Truthtable of all nodes: ", ttables)
+
+    state_links = linkAllStates(ttables)
+    print("State links: ", state_links)
 
     #nextGlobalState(ttables)
 
