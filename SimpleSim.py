@@ -95,11 +95,11 @@ def nextGlobalState(ttables, current_g_state):
     # return next global state
     return next_g_state
 
-def linkAllStates(ttables):
+def allStateTransitions(ttables):
     num_nodes = len(ttables)
     num_states = 2 ** num_nodes
 
-    state_links = {}
+    state_trans = {}
 
     for i in range(num_states):
         # Need to convert to binary state with leading zeros to match length of global states
@@ -107,11 +107,23 @@ def linkAllStates(ttables):
 
         next_state = nextGlobalState(ttables, bin_state)
         
-        state_links[bin_state] = next_state
+        state_trans[bin_state] = next_state
             
-    return state_links
+    return state_trans
+
+'''
+def runAllTraces(ttables):
+    num_nodes = len(ttables)
+
+    searched = []
+
+    if len(searched) != num_nodes:
+        for i in num_nodes-1:
+            bin_state = int(i, 2)
 
 
+    return all_traces
+'''
 
 def main():
     filename = 'ExampleBoolNet1.txt'
@@ -119,8 +131,8 @@ def main():
     ttables = fileInputNodes(filename)
     print("Truthtable of all nodes: ", ttables)
 
-    state_links = linkAllStates(ttables)
-    print("State links: ", state_links)
+    state_trans = allStateTransitions(ttables)
+    print("State transitions: ", state_trans)
 
     #nextGlobalState(ttables)
 
