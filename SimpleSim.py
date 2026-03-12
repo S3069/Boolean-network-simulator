@@ -22,7 +22,7 @@ def manualInputNodes():
             if len(node_ttable) == expected_length:
                 ttable_len_pass = True
             else:
-                print(f"The truthtable does not match expected length for {len(node_neighbourhood)} neighbours.")
+                raise ValueError(f"The truthtable does not match expected length for {len(node_neighbourhood)} neighbours.")
 
         # Convert truthtable to hex
         # node_ttable_hex = format(int(node_ttable, 2), "x")
@@ -41,7 +41,8 @@ def fileInputNodes(filename):
         for line in file:
             line = line.strip()
 
-            # Do a check here for an empty line
+            if line(line) == 0:
+                continue
             
             node_letter, node_neighbourhood, node_ttable = line.split(",")
 
@@ -51,7 +52,7 @@ def fileInputNodes(filename):
             # Validate the truthtable matches length of neighbourhood
             expected_length = 2**len(node_neighbourhood)
             if len(node_ttable) != expected_length:
-                print(f"The truthtable does not match expected length for {len(node_neighbourhood)} neighbours.")
+                raise ValueError(f"The truthtable does not match expected length for node {node_letter}.")
 
             ttables[node_letter] = {
                 "neighbours": node_neighbourhood,
