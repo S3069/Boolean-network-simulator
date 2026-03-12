@@ -6,3 +6,7 @@ convert binary to hex from https://stackoverflow.com/a/2072366
 
 in function nextGlobalState():
 sorting dictionary by keys from https://stackoverflow.com/questions/9001509/how-do-i-sort-a-dictionary-by-key#comment104396122_47017849
+
+in linkAllStates:
+convert int to binary using bin(x)[2:] from https://www.geeksforgeeks.org/python/bin-in-python/
+padding Boolean strings using zfill from https://stackabuse.com/bytes/add-leading-zeros-to-a-number-in-python/
