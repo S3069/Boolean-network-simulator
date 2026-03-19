@@ -65,8 +65,8 @@ def nextGlobalState(ttables, current_g_state):
     return next_g_state
 
 def allStateTransitions(ttables):
-    num_nodes = len(ttables)
-    num_states = 2 ** num_nodes
+    num_nodes = len(ttables)        # Calculate the number of possible global states
+    num_states = 2 ** num_nodes     # Initialize a dictionary to store the traces for each initial state
 
     state_trans = {}
 
@@ -94,20 +94,30 @@ def drawStateGraph(state_trans):
 
     return dot
 
-'''
 def runAllTraces(ttables):
-    num_nodes = len(ttables)
-    num_states = 2 ** num_nodes
+    num_nodes = len(ttables)        # Calculate the number of possible global states
+    num_states = 2 ** num_nodes     # Initialize a dictionary to store the traces for each initial state
 
-    all_traces = {}
+    all_traces = {}                 # Dictionary to store all traces for each initial state
 
     for i in range(num_states):
-        # Need to convert to binary state with leading zeros to match length of global states
-        bin_state = bin(i)[2:].zfill(num_nodes)
+        start_state = bin(i)[2:].zfill(num_nodes)
+        trace = [start_state]      # Initialize the trace with the starting state
+        seen_states = set()         # Set to track seen states for cycle detection
+        
+        current_state = start_state
+        while True:
+            next_state = nextGlobalState(ttables, current_state)
+            trace.append(next_state)
 
+            if next_state in seen_states:  # Cycle detected
+                break
+            seen_states.add(next_state)
+            current_state = next_state
+
+        all_traces[start_state] = trace
 
     return all_traces
-'''
 
 def main():
     filename = 'ExampleBoolNet1.txt'
@@ -119,5 +129,10 @@ def main():
 
     dot = drawStateGraph(state_trans)
 
+    # Run all traces and print them
+    all_traces = runAllTraces(ttables)
+    print("\nTraces for each initial state:")
+    for start_state, trace in all_traces.items():
+        print(" -> ".join(trace))
 
 main()
