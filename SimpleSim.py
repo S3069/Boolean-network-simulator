@@ -123,14 +123,20 @@ def runAllTraces(ttables):
     return all_traces
 
 def saveTracesToFile(all_traces):
-    filename = "allTraces.txt"
+    filename = "traces.txt"
     with open(filename, "w") as file:
         file.write(f"Traces for each initial state:\n\n")
             
         for start_state, trace in all_traces.items():
-            file.write(" -> ".join(trace) + "\n")
+            file.write(f"{start_state}: " + " -> ".join(trace) + "\n")
 
     print(f"Traces saved to {filename}")
+
+def detectAttractors():
+    pass
+
+def saveAttractorsToFile(attractors):
+    pass
 
 def main():
     filename = 'ExampleBoolNet1.txt'
