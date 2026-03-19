@@ -105,7 +105,7 @@ def runAllTraces(ttables):
         trace = [start_state]       # Initialize the trace with the starting state
         seen_states = set()         # Set to track seen states for cycle detection
 
-        seen_states.add(start_state)
+        seen_states.add(start_state) # added start_state to seen_states to prevent skipping it from the loop detection
         
         current_state = start_state
         while True:
@@ -122,6 +122,16 @@ def runAllTraces(ttables):
 
     return all_traces
 
+def saveTracesToFile(all_traces):
+    filename = "allTraces.txt"
+    with open(filename, "w") as file:
+        file.write(f"Traces for each initial state:\n\n")
+            
+        for start_state, trace in all_traces.items():
+            file.write(" -> ".join(trace) + "\n")
+
+    print(f"Traces saved to {filename}")
+
 def main():
     filename = 'ExampleBoolNet1.txt'
 
@@ -134,8 +144,6 @@ def main():
 
     # Run all traces and print them
     all_traces = runAllTraces(ttables)
-    print("\nTraces for each initial state:")
-    for start_state, trace in all_traces.items():
-        print(" -> ".join(trace))
+    saveTracesToFile(all_traces)
 
 main()
