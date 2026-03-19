@@ -102,8 +102,10 @@ def runAllTraces(ttables):
 
     for i in range(num_states):
         start_state = bin(i)[2:].zfill(num_nodes)
-        trace = [start_state]      # Initialize the trace with the starting state
+        trace = [start_state]       # Initialize the trace with the starting state
         seen_states = set()         # Set to track seen states for cycle detection
+
+        seen_states.add(start_state)
         
         current_state = start_state
         while True:
@@ -112,6 +114,7 @@ def runAllTraces(ttables):
 
             if next_state in seen_states:  # Cycle detected
                 break
+
             seen_states.add(next_state)
             current_state = next_state
 
