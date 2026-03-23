@@ -14,3 +14,7 @@ padding Boolean strings using zfill from https://stackabuse.com/bytes/add-leadin
 in drawStateGraph:
 graphviz commands from https://graphviz.readthedocs.io/en/stable/manual.html
 dictionary.items() command from https://www.w3schools.com/python/ref_dictionary_items.asp
+
+for Tkinter UI:
+https://www.homeandlearn.uk/file-dialog-boxes.html
+https://realpython.com/python-gui-tkinter/
