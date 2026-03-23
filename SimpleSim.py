@@ -3,6 +3,10 @@ import os
 os.environ["PATH"] += os.pathsep + r"C:\Program Files (x86)\Graphviz\bin"
 import graphviz
 
+# ------
+# File input and parsing
+# ------
+
 def fileInputNodes(filename):
     ttables = {}
 
@@ -29,6 +33,10 @@ def fileInputNodes(filename):
             }
 
     return ttables
+
+# ------
+# Calculate next states
+# ------
 
 def nextNodeState(node, current_g_state, ttables, node_order):
     # This function should calculate, based on the node's truthtable of neighbours, what the next state of the node should be
@@ -80,6 +88,10 @@ def allStateTransitions(ttables):
             
     return state_trans
 
+# ------
+# State Transition Graph
+# ------
+
 def drawStateGraph(state_trans):
 
     dot = graphviz.Digraph(comment='State Transition Graph') 
@@ -93,6 +105,10 @@ def drawStateGraph(state_trans):
     dot.render(format='png', view=True)
 
     return dot
+
+# ------
+# Traces
+# ------
 
 def runAllTraces(ttables):
     num_nodes = len(ttables)        # Calculate the number of possible global states
@@ -132,11 +148,19 @@ def saveTracesToFile(all_traces):
 
     print(f"Traces saved to {filename}")
 
+# ------
+# Attractors
+# ------
+
 def detectAttractors():
     pass
 
 def saveAttractorsToFile(attractors):
     pass
+
+# ------
+# Main
+# ------
 
 def main():
     filename = 'ExampleBoolNet1.txt'
