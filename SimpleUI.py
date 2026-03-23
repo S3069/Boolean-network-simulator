@@ -27,7 +27,9 @@ def open_file():
         file_entry.delete(0, tk.END)        # Clear existing text from field
         file_entry.insert(0, file_name)     # Insert new file name into field
         
-        start_button.pack(pady=10)
+        # Resets UI to show start button and hide further functions
+        actions_frame.pack_forget()
+        start_btn.pack(pady=10)
 
 # ------
 # Button functions
@@ -43,7 +45,11 @@ def start_processing():
     # ttables = fileInputNodes(selected_file_path)      # Find how to run this command
 
     # Hide start button
-    start_button.pack_forget()
+    start_btn.pack_forget()
+
+    # Show feature buttons
+    actions_frame.pack(pady=20)
+    
 
 def draw_network():
     # Add draw network function from SimpleSim.py
@@ -73,12 +79,23 @@ file_entry = tk.Entry(top_frame, width=30)
 file_entry.insert(0, "Select file")
 file_entry.pack(side=tk.LEFT, padx=5)
 
-open_button = tk.Button(top_frame, text="Open", command=open_file)
-open_button.pack(side=tk.LEFT)
+open_btn = tk.Button(top_frame, text="Open", command=open_file)
+open_btn.pack(side=tk.LEFT)
 
 #  Start Button
-start_button = tk.Button(root, text="Start", command=start_processing)
+start_btn = tk.Button(root, text="Start", command=start_processing)
 
+# Action Selection Buttons
+actions_frame = tk.Frame(root)
+
+draw_btn = tk.Button(actions_frame, text="Draw Network", command=draw_network)
+draw_btn.pack(side=tk.LEFT, padx=10)
+
+trace_btn = tk.Button(actions_frame, text="Print Traces", command=print_traces)
+trace_btn.pack(side=tk.LEFT, padx=10)
+
+attractor_btn = tk.Button(actions_frame, text="Print Attractors", command=print_attractors)
+attractor_btn.pack(side=tk.LEFT, padx=10)
 
 # ------
 # Run
