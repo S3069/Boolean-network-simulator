@@ -72,6 +72,10 @@ def nextGlobalState(ttables, current_g_state):
     # return next global state
     return next_g_state
 
+# ------
+# State Transition Graph
+# ------
+
 def allStateTransitions(ttables):
     num_nodes = len(ttables)        # Calculate the number of possible global states
     num_states = 2 ** num_nodes     # Initialize a dictionary to store the traces for each initial state
@@ -87,10 +91,6 @@ def allStateTransitions(ttables):
         state_trans[bin_state] = next_state
             
     return state_trans
-
-# ------
-# State Transition Graph
-# ------
 
 def drawStateGraph(state_trans):
 
