@@ -72,7 +72,7 @@ def nodeNextState(node, current_g_state, G, node_order):
         state_map[letter] = current_g_state[i]
 
     # Get neighbour's nodes
-    neighbours = G.predecessors(node)
+    neighbours = G.nodes[node]["neighbours"]
 
     # Create a binary string from neighbours
     neighbour_bits = "".join(state_map[nb] for nb in neighbours)
