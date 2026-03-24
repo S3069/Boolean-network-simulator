@@ -36,6 +36,7 @@ def loadNetworkFromFile(filename):
 
     return G
 
+
 # ------
 # Helper Function: extension replacement for output files
 # ------
@@ -46,6 +47,7 @@ def replaceExtension(filename, new_extension):
     new_filename = str(path).replace(current_extensions, new_extension)
 
     return new_filename
+
 
 # ------
 # Wiring Diagram
@@ -60,8 +62,9 @@ def printWiringDiagram(G, filename):
     png_name = replaceExtension(filename, "_WiringDiagram.png")
     A.draw(png_name)
 
+
 # ------
-# Calculate next states
+# Helper functions: Calculate next states
 # ------
 
 def nodeNextState(node, current_g_state, G, node_order):
@@ -97,13 +100,12 @@ def globalNextState(G, current_g_state):
     return next_g_state
 
 
-'''
 # ------
 # State Transition Graph
 # ------
 
-def allStateTransitions(ttables):
-    num_nodes = len(ttables)        # Calculate the number of possible global states
+def allStateTransitions(G):
+    num_nodes = len(G.nodes)        # Calculate the number of possible global states
     num_states = 2 ** num_nodes     # Initialize a dictionary to store the traces for each initial state
 
     state_trans = {}
@@ -112,11 +114,12 @@ def allStateTransitions(ttables):
         # Need to convert to binary state with leading zeros to match length of global states
         bin_state = bin(i)[2:].zfill(num_nodes)
 
-        next_state = nextGlobalState(ttables, bin_state)
+        next_state = globalNextState(G, bin_state)
         
         state_trans[bin_state] = next_state
             
     return state_trans
+'''
 
 def drawStateGraph(state_trans):
 
@@ -197,13 +200,11 @@ def main():
 
     printWiringDiagram(G, filename)
 
-    # Test next state functions
-    test_states = ["00", "01", "10", "11"]
-    for state in test_states:
-        print(f"Calculate next state: {state} -> {globalNextState(G, state)}")
  
-    '''
     state_trans = allStateTransitions(G)
+
+    print(state_trans)
+    '''
 
     dot = drawStateGraph(state_trans)
 
