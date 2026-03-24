@@ -16,7 +16,7 @@ def loadNetworkFromFile(filename):
             line = line.strip()
 
             if len(line) == 0:
-                continue        # Skip rest of loop for empty lines in file
+                continue        # Skip rest of loop for empty line(s) in file
             
             node_letter, node_neighbourhood, node_ttable = line.split(",")
 
@@ -31,6 +31,8 @@ def loadNetworkFromFile(filename):
 
             # Add node and its properties to graph
             G.add_node(node_letter, truthtable=node_ttable, neighbours=node_neighbourhood)  # Neighbourhood is added to preserve order for later state calculations
+            for neighbour in node_neighbourhood:
+                G.add_edge(neighbour, node_letter)          # Add directed edge from neighbour to node
 
     return G
 
