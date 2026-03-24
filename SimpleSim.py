@@ -84,14 +84,13 @@ def nodeNextState(node, current_g_state, G, node_order):
     return new_state
 
 def globalNextState(G, current_g_state):
-    
     # Alphabetical node order used
-    node_order = sorted(ttables.keys())
+    node_order = sorted(G.nodes)
     
     # Find next state of each node and compile
     next_g_states = []
     for node in node_order:
-        next_g_states.append(nextNodeState(node, current_g_state, ttables, node_order))
+        next_g_states.append(nodeNextState(node, current_g_state, G, node_order))
     next_g_state = "".join(next_g_states)
 
     # return next global state
@@ -198,6 +197,11 @@ def main():
 
     printWiringDiagram(G, filename)
 
+    # Test next state functions
+    test_states = ["00", "01", "10", "11"]
+    for state in test_states:
+        print(f"Calculate next state: {state} -> {globalNextState(G, state)}")
+ 
     '''
     state_trans = allStateTransitions(G)
 
