@@ -37,6 +37,21 @@ def loadNetworkFromFile(filename):
 
     return G
 
+# ------
+# Helper Functions
+# ------
+
+def replaceExtension(filename, new_extension):
+    path = Path(filename)
+    current_extensions = "".join(path.suffixes)             # Compile all extensions as a single string to replace
+    new_filename = str(path).replace(current_extensions, new_extension)
+
+    return new_filename
+
+# ------
+# wiring Diagram
+# ------
+
 def printWiringDiagram(G, filename):
     # Draw the graph using pygraphviz
     A = nx.nx_agraph.to_agraph(G)
@@ -46,35 +61,31 @@ def printWiringDiagram(G, filename):
     png_name = replaceExtension(filename, "_WiringDiagram.png")
     A.draw(png_name)
 
-def replaceExtension(filename, new_extension):
-    path = Path(filename)
-    current_extensions = "".join(path.suffixes)             # Compile all extensions as a single string to replace
-    new_filename = str(path).replace(current_extensions, new_extension)
-
-    return new_filename
-
-'''
 # ------
 # Calculate next states
 # ------
 
-def nextNodeState(node, current_g_state, ttables, node_order):
-    # This function should calculate, based on the node's truthtable of neighbours, what the next state of the node should be
+def nextNodeState(node, current_g_state, G, node_order):
     
-    # Numbers the alphabetically sorted letters and maps them to the current global state in a dictionary
+    # Map the sorted nodes to the current global state in a dictionary
     state_map = {}
     for i, letter in enumerate(node_order):
         state_map[letter] = current_g_state[i]
 
-    # Compile the neighbours' states
-    neighbours = ttables[node]["neighbours"]
+    # Get neighbour's nodes
+    neighbours = sorted(G.predecessors(node))  
+
+    # Create a binary string from neighbours
     neighbour_bits = "".join(state_map[nb] for nb in neighbours)
     index = int(neighbour_bits, 2)
     
-    # Find this node's state using the truth table
-    new_state = ttables[node]["truthtable"][index]
+    # Look up next state from truth table
+    new_state = G.nodes[node]["truthtable"][index]
 
     return new_state
+
+
+'''
 
 def nextGlobalState(ttables, current_g_state):
     # This function calculates the next global state based on the current global state.
