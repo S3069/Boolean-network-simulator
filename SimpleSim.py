@@ -87,7 +87,7 @@ def nodeNextState(node, current_g_state, G, node_order):
 
 '''
 
-def nextGlobalState(ttables, current_g_state):
+def globalNextState(ttables, current_g_state):
     # This function calculates the next global state based on the current global state.
     # It calls nextNodeState for each letter, passing in this current global state each time
     
