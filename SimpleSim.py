@@ -6,7 +6,7 @@ import pygraphviz as pgv
 # File input and parsing
 # ------
 
-def fileInputNodes(filename):
+def loadNetworkFromFile(filename):
     G = nx.DiGraph()
 
     with open(filename, "r") as file:
@@ -172,7 +172,7 @@ def saveAttractorsToFile(attractors):
 def main():
     filename = 'ExampleBoolNet1.txt'
 
-    G = fileInputNodes(filename)
+    G = loadNetworkFromFile(filename)
     print("Graph of all nodes: ", G)
 
     '''
