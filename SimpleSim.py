@@ -1,39 +1,45 @@
-# Add graphviz to PATH
-import os
-os.environ["PATH"] += os.pathsep + r"C:\Program Files (x86)\Graphviz\bin"
-import graphviz
+import networkx as nx
+import matplotlib.pyplot as plt
+import pygraphviz as pgv
 
 # ------
 # File input and parsing
 # ------
 
 def fileInputNodes(filename):
-    ttables = {}
+    G = nx.DiGraph()
 
     with open(filename, "r") as file:
         for line in file:
             line = line.strip()
 
             if len(line) == 0:
-                continue
+                continue        # Skip rest of loop for empty lines in file
             
             node_letter, node_neighbourhood, node_ttable = line.split(",")
 
             node_letter = node_letter.upper().strip()
             node_neighbourhood = tuple(node_neighbourhood.upper().strip().split())
+            node_ttable = node_ttable.strip()
 
             # Validate the truthtable matches length of neighbourhood
             expected_length = 2**len(node_neighbourhood)
             if len(node_ttable) != expected_length:
                 raise ValueError(f"The truthtable does not match expected length for node {node_letter}.")
 
-            ttables[node_letter] = {
-                "neighbours": node_neighbourhood,
-                "truthtable": node_ttable
-            }
+            # Add node and its properties to graph
+            G.add_node(node_letter, truthtable=node_ttable)  
 
-    return ttables
+            for neighbour in node_neighbourhood:
+                G.add_edge(neighbour, node_letter)          # Add directed edge from neighbour to node
 
+    A = nx.nx_agraph.to_agraph(G)
+    A.layout(prog='dot')
+    A.draw('test.png')
+
+    return G
+
+'''
 # ------
 # Calculate next states
 # ------
@@ -161,19 +167,21 @@ def saveAttractorsToFile(attractors):
 # ------
 # Main
 # ------
+'''
 
 def main():
     filename = 'ExampleBoolNet1.txt'
 
-    ttables = fileInputNodes(filename)
-    print("Truthtable of all nodes: ", ttables)
+    G = fileInputNodes(filename)
+    print("Graph of all nodes: ", G)
 
-    state_trans = allStateTransitions(ttables)
+    '''
+    state_trans = allStateTransitions(G)
 
     dot = drawStateGraph(state_trans)
 
     # Run all traces and print them
-    all_traces = runAllTraces(ttables)
+    all_traces = runAllTraces(G)
     saveTracesToFile(all_traces)
-
+    '''
 main()
