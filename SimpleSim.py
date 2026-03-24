@@ -30,15 +30,12 @@ def loadNetworkFromFile(filename):
                 raise ValueError(f"The truthtable does not match expected length for node {node_letter}.")
 
             # Add node and its properties to graph
-            G.add_node(node_letter, truthtable=node_ttable)  
-
-            for neighbour in node_neighbourhood:
-                G.add_edge(neighbour, node_letter)          # Add directed edge from neighbour to node
+            G.add_node(node_letter, truthtable=node_ttable, neighbours=node_neighbourhood)  # Neighbourhood is added to preserve order for later state calculations
 
     return G
 
 # ------
-# Helper Functions
+# Helper Function: extension replacement for output files
 # ------
 
 def replaceExtension(filename, new_extension):
@@ -49,7 +46,7 @@ def replaceExtension(filename, new_extension):
     return new_filename
 
 # ------
-# wiring Diagram
+# Wiring Diagram
 # ------
 
 def printWiringDiagram(G, filename):
@@ -73,7 +70,7 @@ def nodeNextState(node, current_g_state, G, node_order):
         state_map[letter] = current_g_state[i]
 
     # Get neighbour's nodes
-    neighbours = sorted(G.predecessors(node))  
+    neighbours = G.nodes[node]["neighbours"]
 
     # Create a binary string from neighbours
     neighbour_bits = "".join(state_map[nb] for nb in neighbours)
@@ -87,9 +84,9 @@ def nodeNextState(node, current_g_state, G, node_order):
 
 '''
 
-def globalNextState(ttables, current_g_state):
+def globalNextState(G, current_g_state):
     # This function calculates the next global state based on the current global state.
-    # It calls nextNodeState for each letter, passing in this current global state each time
+    # It calls nodeNextState for each letter, passing in this current global state each time
     
     # Alphabetical node order used
     node_order = sorted(ttables.keys())
