@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import networkx as nx
 import matplotlib.pyplot as plt
 import pygraphviz as pgv
@@ -33,11 +35,23 @@ def loadNetworkFromFile(filename):
             for neighbour in node_neighbourhood:
                 G.add_edge(neighbour, node_letter)          # Add directed edge from neighbour to node
 
+    return G
+
+def printWiringDiagram(G, filename):
+    # Draw the graph using pygraphviz
     A = nx.nx_agraph.to_agraph(G)
     A.layout(prog='dot')
-    A.draw('test.png')
 
-    return G
+    # Save the graph as a PNG image with the same name as the input file 
+    png_name = replaceExtension(filename, "_WiringDiagram.png")
+    A.draw(png_name)
+
+def replaceExtension(filename, new_extension):
+    path = Path(filename)
+    current_extensions = "".join(path.suffixes)             # Compile all extensions as a single string to replace
+    new_filename = str(path).replace(current_extensions, new_extension)
+
+    return new_filename
 
 '''
 # ------
@@ -174,6 +188,8 @@ def main():
 
     G = loadNetworkFromFile(filename)
     print("Graph of all nodes: ", G)
+
+    printWiringDiagram(G, filename)
 
     '''
     state_trans = allStateTransitions(G)
