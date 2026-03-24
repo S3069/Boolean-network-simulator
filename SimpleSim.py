@@ -72,7 +72,7 @@ def nodeNextState(node, current_g_state, G, node_order):
         state_map[letter] = current_g_state[i]
 
     # Get neighbour's nodes
-    neighbours = G.nodes[node]["neighbours"]
+    neighbours = G.predecessors(node)
 
     # Create a binary string from neighbours
     neighbour_bits = "".join(state_map[nb] for nb in neighbours)
@@ -83,12 +83,7 @@ def nodeNextState(node, current_g_state, G, node_order):
 
     return new_state
 
-
-'''
-
 def globalNextState(G, current_g_state):
-    # This function calculates the next global state based on the current global state.
-    # It calls nodeNextState for each letter, passing in this current global state each time
     
     # Alphabetical node order used
     node_order = sorted(ttables.keys())
@@ -102,6 +97,8 @@ def globalNextState(G, current_g_state):
     # return next global state
     return next_g_state
 
+
+'''
 # ------
 # State Transition Graph
 # ------
