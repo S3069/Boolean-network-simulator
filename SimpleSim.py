@@ -65,7 +65,7 @@ def printWiringDiagram(G, filename):
 # Calculate next states
 # ------
 
-def nextNodeState(node, current_g_state, G, node_order):
+def nodeNextState(node, current_g_state, G, node_order):
     
     # Map the sorted nodes to the current global state in a dictionary
     state_map = {}
