@@ -9,7 +9,7 @@ import pygraphviz as pgv
 # ------
 
 def loadNetworkFromFile(filename):
-    G = nx.DiGraph()
+    G = nx.DiGraph()            # Create a directed graph to represent the Boolean network
 
     with open(filename, "r") as file:
         for line in file:
@@ -42,6 +42,10 @@ def loadNetworkFromFile(filename):
 # ------
 
 def replaceExtension(filename, new_extension):
+    # Source - https://stackoverflow.com/a/56807917
+    # Posted by Michael Hall, modified by community. See post 'Timeline' for change history
+    # Retrieved 2026-03-24, License - CC BY-SA 4.0
+
     path = Path(filename)
     current_extensions = "".join(path.suffixes)             # Compile all extensions as a single string to replace
     new_filename = str(path).replace(current_extensions, new_extension)
@@ -100,7 +104,7 @@ def drawWiringDiagram(G, filename):
     drawDiagram(G, filename, "_WiringDiagram.png")
 
 def drawStateGraph(state_trans, filename):
-    SG = nx.DiGraph()
+    SG = nx.DiGraph()               # Create a directed graph to represent the state transition graph
 
     for state, next_state in state_trans.items():
         SG.add_edge(state, next_state)
@@ -127,17 +131,13 @@ def compileStateTransitions(G):
             
     return state_trans
 
-
-
-'''
-
 # ------
 # Traces
 # ------
 
-def runAllTraces(ttables):
-    num_nodes = len(ttables)        # Calculate the number of possible global states
-    num_states = 2 ** num_nodes     # Initialize a dictionary to store the traces for each initial state
+def runAllTraces(G):
+    num_nodes = len(G.nodes)        # Calculate the number of possible global states
+    num_states = 2 ** num_nodes     # Calculate number of possible global states
 
     all_traces = {}                 # Dictionary to store all traces for each initial state
 
@@ -150,7 +150,7 @@ def runAllTraces(ttables):
         
         current_state = start_state
         while True:
-            next_state = nextGlobalState(ttables, current_state)
+            next_state = globalNextState(G, current_state)
             trace.append(next_state)
 
             if next_state in seen_states:  # Cycle detected
@@ -162,6 +162,8 @@ def runAllTraces(ttables):
         all_traces[start_state] = trace
 
     return all_traces
+
+'''
 
 def saveTracesToFile(all_traces):
     filename = "traces.txt"
