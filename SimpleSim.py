@@ -65,6 +65,17 @@ def globalNextState(G, current_g_state):
     return next_g_state
 
 # ------
+# Helper function: Canonical reorder
+# ------
+
+def canonicalReorder(cycle):
+    # Generates all rotations of the cycle and returns the lexicographically smallest one as the canonical form
+    rotations = [cycle[i:] + cycle[:i] for i in range(len(cycle))]
+    canonical_cycle = min(rotations)
+
+    return canonical_cycle
+
+# ------
 # File Input
 # ------
 
@@ -152,8 +163,6 @@ def runAllTraces(G):
 
     return all_traces
 
-'''
-
 # ------
 # Attractors
 # ------
@@ -161,9 +170,7 @@ def runAllTraces(G):
 def detectAttractors():
     pass
 
-def saveAttractorsToFile(attractors):
-    pass
-'''
+
 
 # ------
 # Draw Diagrams
@@ -195,6 +202,9 @@ def saveTracesToFile(all_traces):
 
     print(f"Traces saved to {filename}")
 
+    
+def saveAttractorsToFile(attractors):
+    pass
 '''
 
 
