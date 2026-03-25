@@ -69,9 +69,10 @@ def globalNextState(G, current_g_state):
 # ------
 
 def canonicalReorder(cycle):
-    # Generates all rotations of the cycle and returns the lexicographically smallest one as the canonical form
-    rotations = [cycle[i:] + cycle[:i] for i in range(len(cycle))]
-    canonical_cycle = min(rotations)
+    # Reorder the cycle to start with the smallest state
+    smallest_state = min(cycle)
+    smallest_index = cycle.index(smallest_state)
+    canonical_cycle = cycle[smallest_index:] + cycle[:smallest_index]
 
     return canonical_cycle
 
