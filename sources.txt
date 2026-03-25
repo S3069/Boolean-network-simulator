@@ -1,20 +1,24 @@
-in function inputNodes():
-
+    in function loadNetworkFromFile():
 .replace(" ", "") from https://stackoverflow.com/a/8270146
 comma-separated tuple from https://bobbyhadz.com/blog/python-input-tuple
 convert binary to hex from https://stackoverflow.com/a/2072366
+https://stackoverflow.com/a/56807917
 
 in function nextGlobalState():
 sorting dictionary by keys from https://stackoverflow.com/questions/9001509/how-do-i-sort-a-dictionary-by-key#comment104396122_47017849
 
-in linkAllStates:
+in allStateTransitions():
 convert int to binary using bin(x)[2:] from https://www.geeksforgeeks.org/python/bin-in-python/
 padding Boolean strings using zfill from https://stackabuse.com/bytes/add-leading-zeros-to-a-number-in-python/
 
-in drawStateGraph:
+in drawStateGraph():
 graphviz commands from https://graphviz.readthedocs.io/en/stable/manual.html
 dictionary.items() command from https://www.w3schools.com/python/ref_dictionary_items.asp
 
 for Tkinter UI:
 https://www.homeandlearn.uk/file-dialog-boxes.html
 https://realpython.com/python-gui-tkinter/
+
+for NetworkX graph system: https://networkx.org/documentation/stable/tutorial.html
+for NetworkX and Graphviz: https://stackoverflow.com/a/39662097
+how to use graphviz to draw NetworkX graph object: https://stackoverflow.com/q/39657395
