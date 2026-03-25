@@ -137,7 +137,7 @@ def compileStateTransitions(G):
 # Traces
 # ------
 
-def runAllTraces(G):
+def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=1000):
     # Calculate the number of possible global states
     num_nodes = len(G.nodes)        
     num_states = 2 ** num_nodes     
@@ -148,12 +148,19 @@ def runAllTraces(G):
     for i in range(num_states):
         # Initialize the trace with the starting state and an empty set to track seen states
         start_state = bin(i)[2:].zfill(num_nodes)   # Convert to binary state with leading zeros to match length of global states
+        
         trace = [start_state]       
         seen_states = set()
         seen_states.add(start_state) 
         
-        # Loop until a cycle is detected
         current_state = start_state
+
+        # Flags to control trace output
+        truncated = False
+        attractor = None
+        depth = 0
+
+        # Loop until a cycle is detected
         while True:
             next_state = globalNextState(G, current_state)
             trace.append(next_state)
@@ -172,9 +179,15 @@ def runAllTraces(G):
 # Attractors
 # ------
 
-def detectAttractors():
-    pass
+'''
+def detectAttractors(G):
 
+    all_traces = runAllTraces(G)
+
+    attractors = {}
+
+    pass
+'''
 
 
 # ------
