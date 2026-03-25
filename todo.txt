@@ -5,10 +5,10 @@ split runAllTraces into two methods: one to run a trace from a starting state, a
 then for the attractor detector, search through
 
 for UI & code:
-for either trace or attractor detection, create:
-- optional checkbox to avoid point attractors (self loops). i.e. only search for cyclic attractors
-- optional checkbox for canonical reordering, 
-- optional max search depth (incorporate this as a 'flag' into the outputted dictionary)
+for attractor detection (and runAllTraces), create:
+- [cyclicOnly] optional checkbox to avoid point attractors (self loops). i.e. only search for cyclic attractors
+- [canonicalOrder] optional checkbox for canonical reordering (lowest binary state comes first in saved cycle), 
+- [maxDepth] optional max search depth (incorporate this as a 'flag' into the outputted dictionary)
 
 
 DONE:
