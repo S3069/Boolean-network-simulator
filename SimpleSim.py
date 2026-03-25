@@ -4,38 +4,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import pygraphviz as pgv
 
-# ------
-# File input and parsing
-# ------
-
-def loadNetworkFromFile(filename):
-    G = nx.DiGraph()            # Create a directed graph to represent the Boolean network
-
-    with open(filename, "r") as file:
-        for line in file:
-            line = line.strip()
-
-            if len(line) == 0:
-                continue        # Skip rest of loop for empty line(s) in file
-            
-            node_letter, node_neighbourhood, node_ttable = line.split(",")
-
-            node_letter = node_letter.upper().strip()
-            node_neighbourhood = tuple(node_neighbourhood.upper().strip().split())
-            node_ttable = node_ttable.strip()
-
-            # Validate the truthtable matches length of neighbourhood
-            expected_length = 2**len(node_neighbourhood)
-            if len(node_ttable) != expected_length:
-                raise ValueError(f"The truthtable does not match expected length for node {node_letter}.")
-
-            # Add node and its properties to graph
-            G.add_node(node_letter, truthtable=node_ttable, neighbours=node_neighbourhood)  # Neighbourhood is added to preserve order for later state calculations
-            for neighbour in node_neighbourhood:
-                G.add_edge(neighbour, node_letter)          # Add directed edge from neighbour to node
-
-    return G
-
 
 # ------
 # Helper Functions: Draw and name diagrams
@@ -97,36 +65,54 @@ def globalNextState(G, current_g_state):
     return next_g_state
 
 # ------
-# Draw Diagrams
+# File Input
 # ------
 
-def drawWiringDiagram(G, filename):
-    drawDiagram(G, filename, "_WiringDiagram.png")
+def loadNetworkFromFile(filename):
+    # Create a directed graph to represent the Boolean network
+    G = nx.DiGraph()            
 
-def drawStateGraph(state_trans, filename):
-    SG = nx.DiGraph()               # Create a directed graph to represent the state transition graph
+    with open(filename, "r") as file:
+        for line in file:
+            line = line.strip()
 
-    for state, next_state in state_trans.items():
-        SG.add_edge(state, next_state)
+            # Skip rest of loop for empty line(s) in file
+            if len(line) == 0:
+                continue
+            
+            # Parse the line into node properties
+            node_letter, node_neighbourhood, node_ttable = line.split(",")
+            node_letter = node_letter.upper().strip()
+            node_neighbourhood = tuple(node_neighbourhood.upper().strip().split())
+            node_ttable = node_ttable.strip()
 
-    drawDiagram(SG, filename, "_StateGraph.png")
+            # Validate the truthtable matches length of neighbourhood
+            expected_length = 2**len(node_neighbourhood)
+            if len(node_ttable) != expected_length:
+                raise ValueError(f"The truthtable does not match expected length for node {node_letter}.")
+
+            # Add node and its properties to graph
+            G.add_node(node_letter, truthtable=node_ttable, neighbours=node_neighbourhood)  # Neighbourhood is added to preserve order for later state calculations
+            for neighbour in node_neighbourhood:
+                G.add_edge(neighbour, node_letter)          # Add directed edge from neighbour to node
+
+    return G
 
 # ------
 # State Transition Graph
 # ------
 
 def compileStateTransitions(G):
-    num_nodes = len(G.nodes)        # Calculate the number of possible global states
-    num_states = 2 ** num_nodes     # Initialize a dictionary to store the traces for each initial state
+    # Calculate the number of possible global states
+    num_nodes = len(G.nodes)
+    num_states = 2 ** num_nodes
 
+    # For each possible global state, calculate the next global state and store in a dictionary
     state_trans = {}
-
     for i in range(num_states):
-        # Need to convert to binary state with leading zeros to match length of global states
-        bin_state = bin(i)[2:].zfill(num_nodes)
+        bin_state = bin(i)[2:].zfill(num_nodes)     # Convert to binary state with leading zeros to match length of global states
 
         next_state = globalNextState(G, bin_state)
-        
         state_trans[bin_state] = next_state
             
     return state_trans
@@ -136,18 +122,21 @@ def compileStateTransitions(G):
 # ------
 
 def runAllTraces(G):
-    num_nodes = len(G.nodes)        # Calculate the number of possible global states
-    num_states = 2 ** num_nodes     # Calculate number of possible global states
+    # Calculate the number of possible global states
+    num_nodes = len(G.nodes)        
+    num_states = 2 ** num_nodes     
 
-    all_traces = {}                 # Dictionary to store all traces for each initial state
+    all_traces = {}                 
 
+    # For each possible global state, calculate the trace until a cycle is detected and store in a dictionary
     for i in range(num_states):
-        start_state = bin(i)[2:].zfill(num_nodes)
-        trace = [start_state]       # Initialize the trace with the starting state
-        seen_states = set()         # Set to track seen states for cycle detection
-
-        seen_states.add(start_state) # added start_state to seen_states to prevent skipping it from the loop detection
+        # Initialize the trace with the starting state and an empty set to track seen states
+        start_state = bin(i)[2:].zfill(num_nodes)   # Convert to binary state with leading zeros to match length of global states
+        trace = [start_state]       
+        seen_states = set()
+        seen_states.add(start_state) 
         
+        # Loop until a cycle is detected
         current_state = start_state
         while True:
             next_state = globalNextState(G, current_state)
@@ -165,6 +154,37 @@ def runAllTraces(G):
 
 '''
 
+# ------
+# Attractors
+# ------
+
+def detectAttractors():
+    pass
+
+def saveAttractorsToFile(attractors):
+    pass
+'''
+
+# ------
+# Draw Diagrams
+# ------
+
+def drawWiringDiagram(G, filename):
+    drawDiagram(G, filename, "_WiringDiagram.png")
+
+def drawStateGraph(state_trans, filename):
+    SG = nx.DiGraph()               # Create a directed graph to represent the state transition graph
+
+    for state, next_state in state_trans.items():
+        SG.add_edge(state, next_state)
+
+    drawDiagram(SG, filename, "_StateGraph.png")
+
+'''
+# ------
+# Save to File
+# ------
+
 def saveTracesToFile(all_traces):
     filename = "traces.txt"
     with open(filename, "w") as file:
@@ -175,20 +195,12 @@ def saveTracesToFile(all_traces):
 
     print(f"Traces saved to {filename}")
 
-# ------
-# Attractors
-# ------
+'''
 
-def detectAttractors():
-    pass
-
-def saveAttractorsToFile(attractors):
-    pass
 
 # ------
 # Main
 # ------
-'''
 
 def main():
     filename = 'ExampleBoolNet1.txt'
