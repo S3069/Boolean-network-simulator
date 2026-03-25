@@ -1,2 +1,19 @@
-Harsher input validation and error handling (every function)
-Shall I force each character of the neighbourhood to become a separated neighbour? Yes
+Harsher input validation and error handling (for input function)
+
+split runAllTraces into two methods: one to run a trace from a starting state, and another to compile it.
+
+then for the attractor detector, search through
+
+for UI & code:
+for either trace or attractor detection, create:
+- optional checkbox to avoid point attractors (self loops). i.e. only search for cyclic attractors
+- optional checkbox for canonical reordering, 
+- optional max search depth (incorporate this as a 'flag' into the outputted dictionary)
+
+
+DONE:
+
+Need to refactor to use graph objects rather than dictionaries
+1. use networkx to transform raw network.txt data into a graph object
+2. feed networkx data into graphviz
+
