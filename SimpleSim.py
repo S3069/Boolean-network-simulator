@@ -1,3 +1,4 @@
+from fileinput import filename
 from pathlib import Path
 
 import networkx as nx
@@ -58,8 +59,7 @@ def printWiringDiagram(G, filename):
     A = nx.nx_agraph.to_agraph(G)
     A.layout(prog='dot')
 
-    # Save the graph as a PNG image with the same name as the input file 
-    png_name = replaceExtension(filename, "_WiringDiagram.png")
+    png_name = replaceExtension(filename, "_WiringDiagram.png")    # Renames file to match input file
     A.draw(png_name)
 
 
@@ -119,21 +119,21 @@ def allStateTransitions(G):
         state_trans[bin_state] = next_state
             
     return state_trans
-'''
 
-def drawStateGraph(state_trans):
-
-    dot = graphviz.Digraph(comment='State Transition Graph') 
-
-    for state in state_trans:
-        dot.node(state)
+def drawStateGraph(state_trans, filename):
+    SG = nx.DiGraph()
 
     for state, next_state in state_trans.items():
-        dot.edge(state, next_state)
+        SG.add_edge(state, next_state)
 
-    dot.render(format='png', view=True)
+    # Draw the graph using pygraphviz
+    A = nx.nx_agraph.to_agraph(SG)
+    A.layout(prog='dot')
 
-    return dot
+    png_name = replaceExtension(filename, "_StateGraph.png")    # Renames file to match input file
+    A.draw(png_name)
+
+'''
 
 # ------
 # Traces
@@ -203,11 +203,9 @@ def main():
  
     state_trans = allStateTransitions(G)
 
-    print(state_trans)
+    drawStateGraph(state_trans, filename)
+
     '''
-
-    dot = drawStateGraph(state_trans)
-
     # Run all traces and print them
     all_traces = runAllTraces(G)
     saveTracesToFile(all_traces)
