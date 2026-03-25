@@ -69,6 +69,10 @@ def globalNextState(G, current_g_state):
 # ------
 
 def canonicalReorder(cycle):
+    # Remove duplicated starting/ending state
+    if len(cycle) > 1 and cycle[0] == cycle[-1]:
+        cycle = cycle[:-1]
+
     # Reorder the cycle to start with the smallest state
     smallest_state = min(cycle)
     smallest_index = cycle.index(smallest_state)
