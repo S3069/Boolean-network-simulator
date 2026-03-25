@@ -39,7 +39,7 @@ def loadNetworkFromFile(filename):
 
 
 # ------
-# Helper Function: extension replacement for output files
+# Helper Functions: Draw and name diagrams
 # ------
 
 def replaceExtension(filename, new_extension):
@@ -49,19 +49,13 @@ def replaceExtension(filename, new_extension):
 
     return new_filename
 
-
-# ------
-# Wiring Diagram
-# ------
-
-def printWiringDiagram(G, filename):
+def drawDiagram(graph, filename, new_extension):
     # Draw the graph using pygraphviz
-    A = nx.nx_agraph.to_agraph(G)
+    A = nx.nx_agraph.to_agraph(graph)
     A.layout(prog='dot')
 
-    png_name = replaceExtension(filename, "_WiringDiagram.png")    # Renames file to match input file
+    png_name = replaceExtension(filename, new_extension)    # Renames file to match input file
     A.draw(png_name)
-
 
 # ------
 # Helper functions: Calculate next states
@@ -99,12 +93,26 @@ def globalNextState(G, current_g_state):
     # return next global state
     return next_g_state
 
+# ------
+# Draw Diagrams
+# ------
+
+def drawWiringDiagram(G, filename):
+    drawDiagram(G, filename, "_WiringDiagram.png")
+
+def drawStateGraph(state_trans, filename):
+    SG = nx.DiGraph()
+
+    for state, next_state in state_trans.items():
+        SG.add_edge(state, next_state)
+
+    drawDiagram(SG, filename, "_StateGraph.png")
 
 # ------
 # State Transition Graph
 # ------
 
-def allStateTransitions(G):
+def compileStateTransitions(G):
     num_nodes = len(G.nodes)        # Calculate the number of possible global states
     num_states = 2 ** num_nodes     # Initialize a dictionary to store the traces for each initial state
 
@@ -120,18 +128,7 @@ def allStateTransitions(G):
             
     return state_trans
 
-def drawStateGraph(state_trans, filename):
-    SG = nx.DiGraph()
 
-    for state, next_state in state_trans.items():
-        SG.add_edge(state, next_state)
-
-    # Draw the graph using pygraphviz
-    A = nx.nx_agraph.to_agraph(SG)
-    A.layout(prog='dot')
-
-    png_name = replaceExtension(filename, "_StateGraph.png")    # Renames file to match input file
-    A.draw(png_name)
 
 '''
 
@@ -196,13 +193,11 @@ def main():
     filename = 'ExampleBoolNet1.txt'
 
     G = loadNetworkFromFile(filename)
-    print("Graph of all nodes: ", G)
+    print("Network: ", G)
 
-    printWiringDiagram(G, filename)
-
+    drawWiringDiagram(G, filename)
  
-    state_trans = allStateTransitions(G)
-
+    state_trans = compileStateTransitions(G)
     drawStateGraph(state_trans, filename)
 
     '''
