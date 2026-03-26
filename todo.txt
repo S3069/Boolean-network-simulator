@@ -2,13 +2,12 @@ Harsher input validation and error handling (for input function)
 
 split runAllTraces into two methods: one to run a trace from a starting state, and another to compile it.
 
-then for the attractor detector, search through
-
-for UI & code:
-for attractor detection (and runAllTraces), create:
+for UI:
+for detectAttractors (and runAllTraces), create parameters:
 - [cyclicOnly] optional checkbox to avoid point attractors (self loops). i.e. only search for cyclic attractors
 - [canonicalOrder] optional checkbox for canonical reordering (lowest binary state comes first in saved cycle), 
 - [maxDepth] optional max search depth (incorporate this as a 'flag' into the outputted dictionary)
+-       ^ now must include truncated flag if the search depth >= maxDepth
 
 
 DONE:
@@ -17,3 +16,6 @@ Need to refactor to use graph objects rather than dictionaries
 1. use networkx to transform raw network.txt data into a graph object
 2. feed networkx data into graphviz
 
+detectAttractors, search through all_traces from runAllTraces
+
+Code: Additional parameters for detectAttractors and runAllTraces
