@@ -164,9 +164,10 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
         while True:
             # Stop if max depth reached
             if depth >= maxDepth:
-                truncated = True
+                truncated_flag = True
                 break
             
+            # Calculate the next state and add to trace
             next_state = globalNextState(G, current_state)
             trace.append(next_state)
             depth += 1
@@ -175,7 +176,7 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
             if next_state in seen_states:
                 # Extract the cycle from the trace
                 cycle_start_index = trace.index(next_state)
-                cycle = trace[cycle_start_index:]
+                cycle = trace[cycle_start_index:-1]         # "-1" excludes the repeated state at the end of the cycle
 
                 # Canonical reorder the cycle if flag is set
                 if canonicalOrder and len(cycle) > 1:
