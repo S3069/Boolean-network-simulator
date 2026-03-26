@@ -156,7 +156,7 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
         current_state = start_state
 
         # Flags to control trace output
-        truncated = False
+        truncated_flag = False
         attractor = None
         depth = 0
 
@@ -192,7 +192,11 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
             seen_states.add(next_state)
             current_state = next_state
 
-        all_traces[start_state] = trace
+        all_traces[start_state] = {
+            "trace": trace,
+            "truncated": truncated_flag,
+            "attractor": attractor
+        }
 
     return all_traces
 
