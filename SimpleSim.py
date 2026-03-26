@@ -205,15 +205,36 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
 # Attractors
 # ------
 
-'''
-def detectAttractors(G):
+def detectAttractors(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
 
-    all_traces = runAllTraces(G)
+    # Run all traces to extract attractor information
+    all_traces = runAllTraces(
+        G,
+        cyclicOnly=cyclicOnly,
+        canonicalOrder=canonicalOrder,
+        maxDepth=maxDepth)
 
     attractors = {}
 
-    pass
-'''
+    for start_state, trace_info in all_traces.items():
+        # Skip if trace was truncated or no attractor found
+        if trace_info["truncated"] or trace_info["attractor"] is None:
+            continue
+        
+        attractor_tuple = tuple(trace_info["attractor"])  # Convert to tuple for immutability and use as dict key
+        
+        if attractor_tuple not in attractors:
+            # Add desired attractor informmation
+            attractors[attractor_tuple] = {
+                "length": len(attractor_tuple),
+                "type": "Cyclic" if len(attractor_tuple) > 1 else "Fixed Point",
+                "basin": [start_state],
+            }
+        else:
+            # If attractor already exists, add the starting state to its basin
+            attractors[attractor_tuple]["basin"].append(start_state)
+
+    return attractors
 
 
 # ------
@@ -262,11 +283,16 @@ def main():
     G = loadNetworkFromFile(filename)
     print("Network: ", G)
 
-    drawWiringDiagram(G, filename)
+    # drawWiringDiagram(G, filename)
  
-    state_trans = compileStateTransitions(G)
-    drawStateGraph(state_trans, filename)
+    # state_trans = compileStateTransitions(G)
+    # drawStateGraph(state_trans, filename)
 
+    attractors = detectAttractors(G, cyclicOnly=False, canonicalOrder=True, maxDepth=10000)
+
+    for attractor, info in attractors.items():
+        print(f"Attractor: {attractor}, Info: {info}")
+    
     '''
     # Run all traces and print them
     all_traces = runAllTraces(G)
