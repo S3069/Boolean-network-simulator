@@ -137,7 +137,7 @@ def compileStateTransitions(G):
 # Traces
 # ------
 
-def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=1000):
+def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
     # Calculate the number of possible global states
     num_nodes = len(G.nodes)        
     num_states = 2 ** num_nodes     
@@ -162,10 +162,31 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=1000):
 
         # Loop until a cycle is detected
         while True:
+            # Stop if max depth reached
+            if depth >= maxDepth:
+                truncated = True
+                break
+            
             next_state = globalNextState(G, current_state)
             trace.append(next_state)
+            depth += 1
 
-            if next_state in seen_states:  # Cycle detected
+            # Check for cycle and handle based on flags
+            if next_state in seen_states:
+                # Extract the cycle from the trace
+                cycle_start_index = trace.index(next_state)
+                cycle = trace[cycle_start_index:]
+
+                # Canonical reorder the cycle if flag is set
+                if canonicalOrder and len(cycle) > 1:
+                    cycle = canonicalReorder(cycle)
+
+                # If only cyclic attractors are desired, break if cycle is a fixed point
+                if cyclicOnly and len(cycle) == 1:
+                    break
+                else:
+                    attractor = cycle
+
                 break
 
             seen_states.add(next_state)
