@@ -2,6 +2,8 @@ Harsher input validation and error handling (for input function)
 
 split runAllTraces into two methods: one to run a trace from a starting state, and another to compile it.
 
+UI buttons: make functional
+
 for UI:
 for detectAttractors (and runAllTraces), create parameters:
 - [cyclicOnly] optional checkbox to avoid point attractors (self loops). i.e. only search for cyclic attractors
@@ -9,6 +11,13 @@ for detectAttractors (and runAllTraces), create parameters:
 - [maxDepth] optional max search depth (incorporate this as a 'flag' into the outputted dictionary)
 -       ^ now must include truncated flag if the search depth >= maxDepth
 
+in detectAttractors:
+- make the runAllTraces call conditional. i.e. only call if it hasn't been ran previously.
+- and only skip running the call if the conditions/parameters match the ones when all_traces was previously ran
+    ^ so probably need to return the conditions alongside the all_traces from runAllTraces.
+- Optional parameter: all_traces (if already ran, otherwise None)
+
+"Save to file" functions
 
 DONE:
 
