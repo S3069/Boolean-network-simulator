@@ -10,7 +10,7 @@ selected_file_path = None
 # Open file
 # ------
 
-def open_file():
+def select_file():
     global selected_file_path
     
     filepath = filedialog.askopenfilename(
@@ -36,8 +36,7 @@ def open_file():
 # Button functions
 # ------
 
-def start_processing():
-    global selected_file_path
+def load_network():
 
     if not selected_file_path:
         return
@@ -80,11 +79,11 @@ file_entry = tk.Entry(top_frame, width=30)
 file_entry.insert(0, "Select file")
 file_entry.pack(side=tk.LEFT, padx=5)
 
-open_btn = tk.Button(top_frame, text="Open", command=open_file)
+open_btn = tk.Button(top_frame, text="Open", command=select_file)
 open_btn.pack(side=tk.LEFT)
 
 #  Start Button
-start_btn = tk.Button(root, text="Start", command=start_processing)
+start_btn = tk.Button(root, text="Start", command=load_network)
 
 # Action Selection Buttons
 actions_frame = tk.Frame(root)
