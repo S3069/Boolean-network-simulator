@@ -283,7 +283,7 @@ def saveAttractorsToFile(attractors, filename=""):
                 file.write(f"Attractor: {attractor_seq}\n")
                 file.write(f"Length: {info['length']}\n")
                 file.write(f"Type: {info['type']}\n")
-                file.write(f"Basin states: {info['basin']}\n")
+                file.write(f"Basin states: {', '.join(info['basin'])}\n")
                 file.write("\n")
 
     print(f"Attractors saved to {filename}")
