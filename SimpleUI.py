@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 import os
+from SimpleSim import loadNetworkFromFile, drawWiringDiagram, compileStateTransitions, drawStateGraph, detectAttractors, runAllTraces, saveAttractorsToFile, saveTracesToFile
 
 # File path of the selected file
 selected_file_path = None
@@ -37,12 +38,12 @@ def open_file():
 
 def start_processing():
     global selected_file_path
-    
+
     if not selected_file_path:
         return
     
-    # Add input/parser function from SimpleSim.py
-    # ttables = fileInputNodes(selected_file_path)      # Find how to run this command
+    global G
+    G = loadNetworkFromFile(selected_file_path)
 
     # Hide start button
     start_btn.pack_forget()
@@ -51,17 +52,17 @@ def start_processing():
     actions_frame.pack(pady=20)
     
 
-def draw_network():
-    # Add draw network function from SimpleSim.py
-    pass
+def draw_wiring_diagram():
+    drawWiringDiagram(G, selected_file_path)
+
+def draw_state_diagram():
+    drawStateGraph(compileStateTransitions(G), selected_file_path)
 
 def print_traces():
-    # Add print traces function from SimpleSim.py
-    pass
+    saveTracesToFile(runAllTraces(G), selected_file_path)
 
 def print_attractors():
-    # Add print attractors function from SimpleSim.py
-    pass
+    saveAttractorsToFile(detectAttractors(G), selected_file_path)
 
 
 # ------
@@ -88,8 +89,11 @@ start_btn = tk.Button(root, text="Start", command=start_processing)
 # Action Selection Buttons
 actions_frame = tk.Frame(root)
 
-draw_btn = tk.Button(actions_frame, text="Draw Network", command=draw_network)
+draw_btn = tk.Button(actions_frame, text="Draw Wiring Diagram", command=draw_wiring_diagram)
 draw_btn.pack(side=tk.LEFT, padx=10)
+
+draw_state_btn = tk.Button(actions_frame, text="Draw State Diagram", command=draw_state_diagram)
+draw_state_btn.pack(side=tk.LEFT, padx=10)
 
 trace_btn = tk.Button(actions_frame, text="Print Traces", command=print_traces)
 trace_btn.pack(side=tk.LEFT, padx=10)
