@@ -263,8 +263,8 @@ def saveTracesToFile(all_traces, filename=""):
     with open(filename, "w") as file:
         file.write(f"Traces for each initial state:\n\n")
             
-        for start_state, trace in all_traces.items():
-            file.write(f"{start_state}: " + " -> ".join(trace) + "\n")
+        for start_state, trace_info in all_traces.items():
+            file.write(f"{start_state}: " + " -> ".join(trace_info["trace"]) + "\n")
 
     print(f"Traces saved to {filename}")
 
