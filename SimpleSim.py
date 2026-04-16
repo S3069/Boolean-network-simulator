@@ -257,8 +257,9 @@ def drawStateGraph(state_trans, filename):
 # Save to File
 # ------
 
-def saveTracesToFile(all_traces):
-    filename = "traces.txt"
+def saveTracesToFile(all_traces, filename=""):
+    filename = replaceExtension(filename, "_Traces.txt")    # Renames file to match input file
+
     with open(filename, "w") as file:
         file.write(f"Traces for each initial state:\n\n")
             
@@ -309,6 +310,6 @@ def main():
     saveAttractorsToFile(attractors, filename)
     
     # Run all traces. Save to file
-    # all_traces = runAllTraces(G)
-    # saveTracesToFile(all_traces)
+    all_traces = runAllTraces(G)
+    saveTracesToFile(all_traces, filename)
 main()
