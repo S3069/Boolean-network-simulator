@@ -252,7 +252,7 @@ def drawStateGraph(state_trans, filename):
 
     drawDiagram(SG, filename, "_StateGraph.png")
 
-'''
+
 # ------
 # Save to File
 # ------
@@ -268,9 +268,25 @@ def saveTracesToFile(all_traces):
     print(f"Traces saved to {filename}")
 
     
-def saveAttractorsToFile(attractors):
-    pass
-'''
+def saveAttractorsToFile(attractors, filename=""):
+    filename = replaceExtension(filename, "_Attractors.txt")    # Renames file to match input file
+
+    with open(filename, "w") as file:
+        file.write(f"Attractors detected:\n\n")
+
+        if not attractors:
+            file.write("No attractors detected.\n")
+
+        else:    
+            for attractor, info in attractors.items():
+                attractor_seq = " -> ".join(attractor)
+                file.write(f"Attractor: {attractor_seq}\n")
+                file.write(f"Length: {info['length']}\n")
+                file.write(f"Type: {info['type']}\n")
+                file.write(f"Basin states: {info['basin']}\n")
+                file.write("\n")
+
+    print(f"Attractors saved to {filename}")
 
 
 # ------
@@ -278,7 +294,7 @@ def saveAttractorsToFile(attractors):
 # ------
 
 def main():
-    filename = 'ExampleBoolNet1.txt'
+    filename = 'ExampleBoolNet4.txt'
 
     G = loadNetworkFromFile(filename)
     print("Network: ", G)
@@ -288,14 +304,11 @@ def main():
     # state_trans = compileStateTransitions(G)
     # drawStateGraph(state_trans, filename)
 
+    # Run all traces and detect attractors. Save to file
     attractors = detectAttractors(G, cyclicOnly=False, canonicalOrder=True, maxDepth=10000)
-
-    for attractor, info in attractors.items():
-        print(f"Attractor: {attractor}, Info: {info}")
+    saveAttractorsToFile(attractors, filename)
     
-    '''
-    # Run all traces and print them
-    all_traces = runAllTraces(G)
-    saveTracesToFile(all_traces)
-    '''
+    # Run all traces. Save to file
+    # all_traces = runAllTraces(G)
+    # saveTracesToFile(all_traces)
 main()
