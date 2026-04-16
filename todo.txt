@@ -2,8 +2,6 @@ Harsher input validation and error handling (for input function)
 
 split runAllTraces into two methods: one to run a trace from a starting state, and another to compile it.
 
-UI buttons: make functional
-
 for UI:
 for detectAttractors (and runAllTraces), create parameters:
 - [cyclicOnly] optional checkbox to avoid point attractors (self loops). i.e. only search for cyclic attractors
@@ -17,7 +15,12 @@ in detectAttractors:
     ^ so probably need to return the conditions alongside the all_traces from runAllTraces.
 - Optional parameter: all_traces (if already ran, otherwise None)
 
-"Save to file" functions
+Make UI popup display windows for images and possibly text files.
+- From those display windows, add a save button.
+
+fix attractorDetection logic. it is repeating the singular (cyclic) attractor in ExampleBoolNet1
+
+-------------------------------------------------------------------------------------------
 
 DONE:
 
@@ -28,3 +31,7 @@ Need to refactor to use graph objects rather than dictionaries
 detectAttractors, search through all_traces from runAllTraces
 
 Code: Additional parameters for detectAttractors and runAllTraces
+
+"Save to file" functions
+
+UI buttons: make functional
