@@ -4,9 +4,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import pygraphviz as pgv
 
-
 # ------
-# Helper Functions: Draw and name diagrams
+# Helper Functions: Draw and name generated files
 # ------
 
 def replaceExtension(filename, new_extension):
@@ -27,6 +26,7 @@ def drawDiagram(graph, filename, new_extension):
 
     png_name = replaceExtension(filename, new_extension)    # Renames file to match input file
     A.draw(png_name)
+
 
 # ------
 # Helper functions: Calculate next states
@@ -80,6 +80,7 @@ def canonicalReorder(cycle):
 
     return canonical_cycle
 
+
 # ------
 # File Input
 # ------
@@ -114,6 +115,7 @@ def loadNetworkFromFile(filename):
 
     return G
 
+
 # ------
 # State Transition Graph
 # ------
@@ -132,6 +134,7 @@ def compileStateTransitions(G):
         state_trans[bin_state] = next_state
             
     return state_trans
+
 
 # ------
 # Traces
@@ -201,6 +204,7 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
 
     return all_traces
 
+
 # ------
 # Attractors
 # ------
@@ -267,7 +271,6 @@ def saveTracesToFile(all_traces, filename=""):
             file.write(f"{start_state}: " + " -> ".join(trace_info["trace"]) + "\n")
 
     print(f"Traces saved to {filename}")
-
     
 def saveAttractorsToFile(attractors, filename=""):
     filename = replaceExtension(filename, "_Attractors.txt")    # Renames file to match input file
@@ -288,28 +291,3 @@ def saveAttractorsToFile(attractors, filename=""):
                 file.write("\n")
 
     print(f"Attractors saved to {filename}")
-
-
-# ------
-# Main
-# ------
-
-def main():
-    filename = 'ExampleBoolNet4.txt'
-
-    G = loadNetworkFromFile(filename)
-    print("Network: ", G)
-
-    # drawWiringDiagram(G, filename)
- 
-    # state_trans = compileStateTransitions(G)
-    # drawStateGraph(state_trans, filename)
-
-    # Run all traces and detect attractors. Save to file
-    attractors = detectAttractors(G, cyclicOnly=False, canonicalOrder=True, maxDepth=10000)
-    saveAttractorsToFile(attractors, filename)
-    
-    # Run all traces. Save to file
-    all_traces = runAllTraces(G)
-    saveTracesToFile(all_traces, filename)
-main()
