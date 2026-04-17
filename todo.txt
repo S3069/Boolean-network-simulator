@@ -19,6 +19,7 @@ Make UI popup display windows for images and possibly text files.
 - From those display windows, add a save button.
 
 fix attractorDetection logic. it is repeating the singular (cyclic) attractor in ExampleBoolNet1
+^ when attractor detection runs, it runs with default canonicalOrder parameter (i.e. False), so the singular cycle gets identified as two cycles because of their differing starting points
 
 -------------------------------------------------------------------------------------------
 
