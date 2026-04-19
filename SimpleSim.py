@@ -52,9 +52,7 @@ def nodeNextState(node, current_g_state, G, node_order):
 
     return new_state
 
-def globalNextState(G, current_g_state):
-    # Alphabetical node order used
-    node_order = sorted(G.nodes)
+def globalNextState(G, current_g_state, node_order):
     
     # Find next state of each node and compile
     next_g_states = []
@@ -126,12 +124,15 @@ def compileStateTransitions(G):
     num_nodes = len(G.nodes)
     num_states = 2 ** num_nodes
 
+    # Sort nodes and pass into globalNextState
+    node_order = sorted(G.nodes)
+
     # For each possible global state, calculate the next global state and store in a dictionary
     state_trans = {}
     for i in range(num_states):
         bin_state = bin(i)[2:].zfill(num_nodes)     # Convert to binary state with leading zeros to match length of global states
 
-        next_state = globalNextState(G, bin_state)
+        next_state = globalNextState(G, bin_state, node_order)
         state_trans[bin_state] = next_state
             
     return state_trans
@@ -203,6 +204,10 @@ def runAllTraces(state_trans, cyclicOnly=False, canonicalOrder=False, maxDepth=1
 # ------
 
 def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
+
+    '''
+    TODO: make it optional to run all_traces if this has already been run to save time when using the UI
+    '''
 
     # Run all traces to extract attractor information
     all_traces = runAllTraces(
