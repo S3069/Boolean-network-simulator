@@ -11,7 +11,7 @@ selected_file_path = None
 # ------
 
 def select_file():
-    global selected_file_path
+    global filepath
     
     filepath = filedialog.askopenfilename(
         title="Open File",
@@ -20,7 +20,6 @@ def select_file():
     
     # If a file was selected, update the entry field and store the path
     if filepath:
-        selected_file_path = filepath
         
         # Displays only file name
         file_name = os.path.basename(filepath)
@@ -37,31 +36,35 @@ def select_file():
 # ------
 
 def load_network():
-
-    if not selected_file_path:
+    # If no file is selected, do nothing
+    if not filepath:
         return
     
-    global G
-    G = loadNetworkFromFile(selected_file_path)
+    # Load the network and compile state transitions
+    global G, state_trans
+    G = loadNetworkFromFile(filepath)
+    state_trans = compileStateTransitions(G)
 
     # Hide start button
     start_btn.pack_forget()
 
-    # Show feature buttons
+    # Show command buttons
     actions_frame.pack(pady=20)
     
 
 def draw_wiring_diagram():
-    drawWiringDiagram(G, selected_file_path)
+    drawWiringDiagram(G, filepath)
 
 def draw_state_diagram():
-    drawStateGraph(compileStateTransitions(G), selected_file_path)
+    drawStateGraph(state_trans, filepath)
 
 def print_traces():
-    saveTracesToFile(runAllTraces(G), selected_file_path)
+    traces = runAllTraces(state_trans)
+    saveTracesToFile(traces, filepath)
 
 def print_attractors():
-    saveAttractorsToFile(compileAttractors(G), selected_file_path)
+    attractors = compileAttractors(state_trans)
+    saveAttractorsToFile(attractors, filepath)
 
 
 # ------

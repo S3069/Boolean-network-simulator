@@ -141,22 +141,14 @@ def compileStateTransitions(G):
 # Traces
 # ------
 
-def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
-    # Calculate the number of possible global states
-    num_nodes = len(G.nodes)        
-    num_states = 2 ** num_nodes     
-
+def runAllTraces(state_trans, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
     all_traces = {}                 
 
-    # For each possible global state, calculate the trace until a cycle is detected and store in a dictionary
-    for i in range(num_states):
-        # Initialize the trace with the starting state and an empty set to track seen states
-        start_state = bin(i)[2:].zfill(num_nodes)   # Convert to binary state with leading zeros to match length of global states
-        
+    # For each possible starting state, run the trace until a cycle is detected or max search depth is reached
+    for start_state in state_trans:
+        # Initialize trace and seen states
         trace = [start_state]       
-        seen_states = set()
-        seen_states.add(start_state) 
-        
+        seen_states = {start_state}
         current_state = start_state
 
         # Flags to control trace output
@@ -172,7 +164,7 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
                 break
             
             # Calculate the next state and add to trace
-            next_state = globalNextState(G, current_state)
+            next_state = state_trans[current_state]
             trace.append(next_state)
             depth += 1
 
@@ -186,7 +178,7 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
                 if canonicalOrder and len(cycle) > 1:
                     cycle = canonicalReorder(cycle)
 
-                # If only cyclic attractors are desired, break if cycle is a fixed point
+                # If only cyclic attractors are desired, break if cycle is a fixed point cycle (length = 1)
                 if cyclicOnly and len(cycle) == 1:
                     break
                 else:
@@ -210,11 +202,11 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
 # Attractors
 # ------
 
-def compileAttractors(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
+def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
 
     # Run all traces to extract attractor information
     all_traces = runAllTraces(
-        G,
+        state_trans,
         cyclicOnly=cyclicOnly,
         canonicalOrder=canonicalOrder,
         maxDepth=maxDepth)
