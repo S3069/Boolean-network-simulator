@@ -227,6 +227,7 @@ def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDe
 
         '''
             TODO: Find a way to compare non-canonical cycles for uniqueness while storing them in an optional non-canonical order.
+            TODO: to attractor info: add ID? add states of attractors?
         '''
         
         # Compare canonical order of attractor to ensure uniqueness
