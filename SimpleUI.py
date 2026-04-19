@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 import os
-from SimpleSim import loadNetworkFromFile, drawWiringDiagram, compileStateTransitions, drawStateGraph, detectAttractors, runAllTraces, saveAttractorsToFile, saveTracesToFile
+from SimpleSim import loadNetworkFromFile, drawWiringDiagram, compileStateTransitions, drawStateGraph, compileAttractors, runAllTraces, saveAttractorsToFile, saveTracesToFile
 
 # File path of the selected file
 selected_file_path = None
@@ -61,7 +61,7 @@ def print_traces():
     saveTracesToFile(runAllTraces(G), selected_file_path)
 
 def print_attractors():
-    saveAttractorsToFile(detectAttractors(G), selected_file_path)
+    saveAttractorsToFile(compileAttractors(G), selected_file_path)
 
 
 # ------

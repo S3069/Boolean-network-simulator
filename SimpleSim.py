@@ -1,3 +1,4 @@
+from inspect import trace
 from pathlib import Path
 
 import networkx as nx
@@ -209,7 +210,7 @@ def runAllTraces(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
 # Attractors
 # ------
 
-def detectAttractors(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
+def compileAttractors(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
 
     # Run all traces to extract attractor information
     all_traces = runAllTraces(
@@ -224,19 +225,26 @@ def detectAttractors(G, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
         # Skip if trace was truncated or no attractor found
         if trace_info["truncated"] or trace_info["attractor"] is None:
             continue
+
+        trace_attractor = trace_info["attractor"]
+
+        '''
+            TODO: Find a way to compare non-canonical cycles for uniqueness while storing them in an optional non-canonical order.
+        '''
         
-        attractor_tuple = tuple(trace_info["attractor"])  # Convert to tuple for immutability and use as dict key
+        # Compare canonical order of attractor to ensure uniqueness
+        compare_attractor = tuple(canonicalReorder(trace_attractor))
         
-        if attractor_tuple not in attractors:
-            # Add desired attractor informmation
-            attractors[attractor_tuple] = {
-                "length": len(attractor_tuple),
-                "type": "Cyclic" if len(attractor_tuple) > 1 else "Fixed Point",
+        if compare_attractor not in attractors:
+            # Add desired attractor information
+            attractors[compare_attractor] = {
+                "length": len(compare_attractor),
+                "type": "Cyclic" if len(compare_attractor) > 1 else "Fixed Point",
                 "basin": [start_state],
             }
         else:
             # If attractor already exists, add the starting state to its basin
-            attractors[attractor_tuple]["basin"].append(start_state)
+            attractors[compare_attractor]["basin"].append(start_state)
 
     return attractors
 
