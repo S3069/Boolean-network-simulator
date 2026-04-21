@@ -1,10 +1,21 @@
 import tkinter as tk
 from tkinter import filedialog
 import os
-from SimpleSim import loadNetworkFromFile, drawWiringDiagram, compileStateTransitions, drawStateGraph, compileAttractors, runAllTraces, saveAttractorsToFile, saveTracesToFile
+from SimpleSim import (
+    loadNetworkFromFile, 
+    drawWiringDiagram, 
+    compileStateTransitions, 
+    drawStateGraph, 
+    compileAttractors, 
+    runAllTraces, 
+    saveAttractorsToFile, 
+    saveTracesToFile
+    )
 
-# File path of the selected file
-selected_file_path = None
+# Global variables
+filepath = None
+G = None
+state_trans = None
 
 # ------
 # Open file
@@ -12,7 +23,7 @@ selected_file_path = None
 
 def select_file():
     global filepath
-    
+
     filepath = filedialog.askopenfilename(
         title="Open File",
         filetypes=(("Text Files", "*.txt"), ("All Files", "*.*"))
@@ -20,51 +31,54 @@ def select_file():
     
     # If a file was selected, update the entry field and store the path
     if filepath:
-        
-        # Displays only file name
         file_name = os.path.basename(filepath)
         
-        file_entry.delete(0, tk.END)        # Clear existing text from field
-        file_entry.insert(0, file_name)     # Insert new file name into field
+        file_entry.delete(0, tk.END)
+        file_entry.insert(0, file_name) 
         
-        # Resets UI to show start button and hide further functions
-        actions_frame.pack_forget()
-        start_btn.pack(pady=10)
+        # Resets UI to show load button and hide further functions
+        action_frame.pack_forget()
+        load_btn.pack(pady=10)
 
 # ------
 # Button functions
 # ------
 
 def load_network():
+    global G, state_trans
+
     # If no file is selected, do nothing
     if not filepath:
         return
     
     # Load the network and compile state transitions
-    global G, state_trans
     G = loadNetworkFromFile(filepath)
     state_trans = compileStateTransitions(G)
 
-    # Hide start button
-    start_btn.pack_forget()
+    # Hide load button
+    load_btn.pack_forget()
 
     # Show command buttons
-    actions_frame.pack(pady=20)
+    action_frame.pack(pady=20)
     
 
 def draw_wiring_diagram():
-    drawWiringDiagram(G, filepath)
+    if G is not None:
+        drawWiringDiagram(G, filepath)
 
 def draw_state_diagram():
-    drawStateGraph(state_trans, filepath)
+    if state_trans is not None:
+        drawStateGraph(state_trans, filepath)
 
 def print_traces():
-    traces = runAllTraces(state_trans)
-    saveTracesToFile(traces, filepath)
+    if state_trans is not None:
+        traces = runAllTraces(state_trans)
+        saveTracesToFile(traces, filepath)
 
 def print_attractors():
-    attractors = compileAttractors(state_trans)
-    saveAttractorsToFile(attractors, filepath)
+    if state_trans is not None:
+        attractors = compileAttractors(state_trans)
+        saveAttractorsToFile(attractors, filepath)
 
 
 # ------
@@ -73,34 +87,90 @@ def print_attractors():
 
 root = tk.Tk()
 root.title("Boolean Network Simulator")
-root.geometry("500x250")
+root.geometry("500x300")
 
+# (TOP) File Selection area
 top_frame = tk.Frame(root)
 top_frame.pack(pady=20)
 
-file_entry = tk.Entry(top_frame, width=30)
+file_entry = tk.Entry(top_frame, width=32)
 file_entry.insert(0, "Select file")
 file_entry.pack(side=tk.LEFT, padx=5)
 
-open_btn = tk.Button(top_frame, text="Open", command=select_file)
+open_btn = tk.Button(
+    top_frame, 
+    text="Open", 
+    command=select_file)
 open_btn.pack(side=tk.LEFT)
 
-#  Start Button
-start_btn = tk.Button(root, text="Start", command=load_network)
+# Start Button
+load_btn = tk.Button(
+    root, 
+    text="Load Network", 
+    command=load_network)
+load_btn.pack(pady=10)
 
-# Action Selection Buttons
-actions_frame = tk.Frame(root)
+# (MAIN) Actions Frame
+action_frame = tk.Frame(root)
 
-draw_btn = tk.Button(actions_frame, text="Draw Wiring Diagram", command=draw_wiring_diagram)
-draw_btn.pack(side=tk.LEFT, padx=10)
+# --- Visual Selection ---
+visual_frame = tk.Frame(action_frame)
+visual_frame.pack(pady=10)
 
-draw_state_btn = tk.Button(actions_frame, text="Draw State Diagram", command=draw_state_diagram)
-draw_state_btn.pack(side=tk.LEFT, padx=10)
+visual_label = tk.Label(
+    visual_frame,
+    text="Visualize Network",
+    width=15,
+    font=("Arial", 11, "bold")
+)
+visual_label.pack(pady=(0, 10))
 
-trace_btn = tk.Button(actions_frame, text="Print Traces", command=print_traces)
+test_btn = tk.Button(
+    visual_frame, 
+    text="Visualize Network",
+    font=("Arial", 10),
+    width=15,
+    command=draw_wiring_diagram
+)
+test_btn.pack(padx=10)
+
+# Buttons for visualizations
+
+visual_btn_frame = tk.Frame(visual_frame)
+visual_btn_frame.pack()
+
+wiring_btn = tk.Button(
+    visual_btn_frame, 
+    text="Wiring Diagram", 
+    font=("Arial", 10),
+    width=15,
+    command=draw_wiring_diagram
+)
+wiring_btn.pack(side=tk.LEFT, padx=10)
+
+state_btn = tk.Button(
+    visual_btn_frame, 
+    text="State Diagram", 
+    font=("Arial", 10),
+    width=15,
+    command=draw_state_diagram
+)
+state_btn.pack(side=tk.LEFT, padx=10)
+
+# --- Analysis Selection ---
+analysis_frame = tk.Frame(action_frame)
+analysis_frame.pack(pady=10)
+
+trace_btn = tk.Button(
+    analysis_frame, 
+    text="Print Traces", 
+    command=print_traces)
 trace_btn.pack(side=tk.LEFT, padx=10)
 
-attractor_btn = tk.Button(actions_frame, text="Print Attractors", command=print_attractors)
+attractor_btn = tk.Button(
+    analysis_frame, 
+    text="Print Attractors", 
+    command=print_attractors)
 attractor_btn.pack(side=tk.LEFT, padx=10)
 
 # ------
