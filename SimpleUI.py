@@ -72,12 +72,22 @@ def draw_state_diagram():
 
 def print_traces():
     if state_trans is not None:
-        traces = runAllTraces(state_trans)
+        traces = runAllTraces(
+            state_trans,
+            cyclicOnly = cyclic_var.get(),
+            canonicalOrder = canonical_var.get(),
+            maxDepth = max_depth_var.get()
+        )
         saveTracesToFile(traces, filepath)
 
 def print_attractors():
     if state_trans is not None:
-        attractors = compileAttractors(state_trans)
+        attractors = compileAttractors(
+            state_trans,
+            cyclicOnly = cyclic_var.get(),
+            canonicalOrder = canonical_var.get(),
+            maxDepth = max_depth_var.get()
+            )
         saveAttractorsToFile(attractors, filepath)
 
 
