@@ -76,8 +76,8 @@ def print_traces():
             state_trans,
             cyclicOnly = cyclic_var.get(),
             canonicalOrder = canonical_var.get(),
-            maxDepth = max_depth_var.get()
-        )
+            maxDepth = get_max_depth()
+            )
         saveTracesToFile(traces, filepath)
 
 def print_attractors():
@@ -86,13 +86,30 @@ def print_attractors():
             state_trans,
             cyclicOnly = cyclic_var.get(),
             canonicalOrder = canonical_var.get(),
-            maxDepth = max_depth_var.get()
+            maxDepth = get_max_depth()
             )
         saveAttractorsToFile(attractors, filepath)
 
+# ------
+# Max depth validation functions
+# ------
+
+def validate_int(value):
+    # Allow empty string (to allow user to clear the field)
+    if value == "":
+        return True
+    
+    # Return valid integer
+    return value.isdigit()
+
+def get_max_depth():
+    try:
+        return max_depth_var.get()
+    except tk.TclError:
+        return 10000
 
 # ------
-# Window
+# UI Window
 # ------
 
 root = tk.Tk()
@@ -103,6 +120,7 @@ root.geometry("550x380")
 cyclic_var = tk.BooleanVar(value=False)
 canonical_var = tk.BooleanVar(value=False)
 max_depth_var = tk.IntVar(value=10000)
+valid_md_command = root.register(validate_int)
 
 # (TOP) File Selection area
 top_frame = tk.Frame(root)
@@ -201,7 +219,13 @@ depth_frame.pack(pady=5)
 depth_label = tk.Label(depth_frame, text="Max Trace Depth:")
 depth_label.pack(side=tk.LEFT, padx=(0, 5))
 
-depth_entry = tk.Entry(depth_frame, textvariable=max_depth_var, width=10)
+depth_entry = tk.Entry(
+    depth_frame,
+    textvariable=max_depth_var,
+    width=10,
+    validate="key",
+    validatecommand=(valid_md_command, "%P")
+)
 depth_entry.pack(side=tk.LEFT)
 
 # Buttons for analysis
