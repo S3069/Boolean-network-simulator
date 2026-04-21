@@ -87,7 +87,12 @@ def print_attractors():
 
 root = tk.Tk()
 root.title("Boolean Network Simulator")
-root.geometry("550x330")
+root.geometry("550x380")
+
+# Settings variables
+cyclic_var = tk.BooleanVar(value=False)
+canonical_var = tk.BooleanVar(value=False)
+max_depth_var = tk.IntVar(value=10000)
 
 # (TOP) File Selection area
 top_frame = tk.Frame(root)
@@ -159,6 +164,35 @@ analysis_label = tk.Label(
     font=("Arial", 11, "bold")
 )
 analysis_label.pack(pady=(0, 10))
+
+# Settings for analysis
+settings_frame = tk.Frame(analysis_frame)
+settings_frame.pack(pady=5)
+
+# Settings: Checkbox Settings
+cyclic_checkbox = tk.Checkbutton(
+    settings_frame, 
+    text="Cyclic Attractors Only", 
+    variable=cyclic_var
+)
+cyclic_checkbox.pack(anchor="w")
+
+canonical_checkbox = tk.Checkbutton(
+    settings_frame, 
+    text="Use canonical ordering", 
+    variable=canonical_var
+)
+canonical_checkbox.pack(anchor="w")
+
+# Settings: Max Depth
+depth_frame = tk.Frame(settings_frame)
+depth_frame.pack(pady=5)
+
+depth_label = tk.Label(depth_frame, text="Max Trace Depth:")
+depth_label.pack(side=tk.LEFT, padx=(0, 5))
+
+depth_entry = tk.Entry(depth_frame, textvariable=max_depth_var, width=10)
+depth_entry.pack(side=tk.LEFT)
 
 # Buttons for analysis
 
