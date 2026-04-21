@@ -217,6 +217,7 @@ def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDe
         maxDepth=maxDepth)
 
     attractors = {}
+    attractor_id = 1
 
     for start_state, trace_info in all_traces.items():
         # Skip if trace was truncated or no attractor found
@@ -236,10 +237,13 @@ def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDe
         if compare_attractor not in attractors:
             # Add desired attractor information
             attractors[compare_attractor] = {
+                "id": attractor_id,
+                "states": sorted(list(compare_attractor)),
                 "length": len(compare_attractor),
                 "type": "Cyclic" if len(compare_attractor) > 1 else "Fixed Point",
                 "basin": [start_state],
             }
+            attractor_id += 1
         else:
             # If attractor already exists, add the starting state to its basin
             attractors[compare_attractor]["basin"].append(start_state)
@@ -284,6 +288,10 @@ def saveAttractorsToFile(attractors, filename=""):
     with open(filename, "w") as file:
         file.write(f"Attractors detected:\n\n")
 
+        '''
+        TODO: add settings for attractor detection/trace run to top of the file.
+        '''
+
         if not attractors:
             file.write("No attractors detected.\n")
 
@@ -291,13 +299,12 @@ def saveAttractorsToFile(attractors, filename=""):
             for attractor, info in attractors.items():
                 attractor_seq = " -> ".join(attractor)
                 file.write(f"Attractor: {attractor_seq}\n")
+                file.write(f"ID: {info['id']}\n")
+                file.write(f"Sorted States: {', '.join(info['states'])}\n")
                 file.write(f"Length: {info['length']}\n")
                 file.write(f"Type: {info['type']}\n")
                 file.write(f"Basin states: {', '.join(info['basin'])}\n")
                 file.write("\n")
 
-                '''
-                TODO: add other attractor information to file output, e.g. ID, sorted attractor states, etc.
-                '''
 
     print(f"Attractors saved to {filename}")
