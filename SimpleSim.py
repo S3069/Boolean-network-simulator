@@ -164,7 +164,7 @@ def runAllTraces(state_trans, cyclicOnly=False, canonicalOrder=False, maxDepth=1
                 truncated_flag = True
                 break
             
-            # Calculate the next state and add to trace
+            # Take the next state and add to trace
             next_state = state_trans[current_state]
             trace.append(next_state)
             depth += 1
@@ -295,5 +295,9 @@ def saveAttractorsToFile(attractors, filename=""):
                 file.write(f"Type: {info['type']}\n")
                 file.write(f"Basin states: {', '.join(info['basin'])}\n")
                 file.write("\n")
+
+                '''
+                TODO: add other attractor information to file output, e.g. ID, sorted attractor states, etc.
+                '''
 
     print(f"Attractors saved to {filename}")
