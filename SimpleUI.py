@@ -87,7 +87,7 @@ def print_attractors():
 
 root = tk.Tk()
 root.title("Boolean Network Simulator")
-root.geometry("500x300")
+root.geometry("550x330")
 
 # (TOP) File Selection area
 top_frame = tk.Frame(root)
@@ -120,19 +120,10 @@ visual_frame.pack(pady=10)
 visual_label = tk.Label(
     visual_frame,
     text="Visualize Network",
-    width=15,
+    width=25,
     font=("Arial", 11, "bold")
 )
 visual_label.pack(pady=(0, 10))
-
-test_btn = tk.Button(
-    visual_frame, 
-    text="Visualize Network",
-    font=("Arial", 10),
-    width=15,
-    command=draw_wiring_diagram
-)
-test_btn.pack(padx=10)
 
 # Buttons for visualizations
 
@@ -143,16 +134,16 @@ wiring_btn = tk.Button(
     visual_btn_frame, 
     text="Wiring Diagram", 
     font=("Arial", 10),
-    width=15,
+    width=20,
     command=draw_wiring_diagram
 )
 wiring_btn.pack(side=tk.LEFT, padx=10)
 
 state_btn = tk.Button(
     visual_btn_frame, 
-    text="State Diagram", 
+    text="State Transition Diagram", 
     font=("Arial", 10),
-    width=15,
+    width=20,
     command=draw_state_diagram
 )
 state_btn.pack(side=tk.LEFT, padx=10)
@@ -161,16 +152,31 @@ state_btn.pack(side=tk.LEFT, padx=10)
 analysis_frame = tk.Frame(action_frame)
 analysis_frame.pack(pady=10)
 
+analysis_label = tk.Label(
+    analysis_frame,
+    text="Analyse Network Dynamics",
+    width=25,
+    font=("Arial", 11, "bold")
+)
+analysis_label.pack(pady=(0, 10))
+
+# Buttons for analysis
+
+analysis_btn_frame = tk.Frame(analysis_frame)
+analysis_btn_frame.pack()
+
 trace_btn = tk.Button(
-    analysis_frame, 
-    text="Print Traces", 
-    command=print_traces)
+    analysis_btn_frame, 
+    text="Export Traces", 
+    font=("Arial", 10),
+    width=20,command=print_traces)
 trace_btn.pack(side=tk.LEFT, padx=10)
 
 attractor_btn = tk.Button(
-    analysis_frame, 
-    text="Print Attractors", 
-    command=print_attractors)
+    analysis_btn_frame, 
+    text="Export Attractors", 
+    font=("Arial", 10),
+    width=20,    command=print_attractors)
 attractor_btn.pack(side=tk.LEFT, padx=10)
 
 # ------
