@@ -129,16 +129,30 @@ def get_depth():
 
 root = tk.Tk()
 root.title("Boolean Network Simulator")
-root.geometry("550x380")
+root.geometry("1000x500")
 
-# Settings variables
+# ----- Layout frames -----
+main_frame = tk.Frame(root)
+main_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+
+left_frame = tk.Frame(main_frame)
+left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+separator = tk.Frame(main_frame, width=2, bg="grey")
+separator.pack(side=tk.LEFT, fill=tk.Y, padx=10)
+
+right_frame = tk.Frame(main_frame, width=300)
+right_frame.pack(side=tk.RIGHT, fill=tk.BOTH)
+right_frame.pack_propagate(False)  # Prevent frame from resizing to fit content
+
+# ----- Settings variables -----
 cyclic_var = tk.BooleanVar(value=False)
 canonical_var = tk.BooleanVar(value=False)
 depth_var = tk.IntVar(value=10000)
 valid_depth_command = root.register(validate_depth)
 
-# (TOP) File Selection area
-top_frame = tk.Frame(root)
+# ----- File Selection area -----
+top_frame = tk.Frame(left_frame)
 top_frame.pack(pady=20)
 
 file_entry = tk.Entry(top_frame, width=32)
@@ -153,13 +167,13 @@ open_btn.pack(side=tk.LEFT)
 
 # Start Button
 load_btn = tk.Button(
-    root, 
+    left_frame, 
     text="Load Network", 
     command=load_network)
 load_btn.pack(pady=10)
 
-# (MAIN) Actions Frame
-action_frame = tk.Frame(root)
+# ----- Actions Frame -----
+action_frame = tk.Frame(left_frame)
 
 # --- Visual Selection ---
 visual_frame = tk.Frame(action_frame)
@@ -254,14 +268,16 @@ trace_btn = tk.Button(
     analysis_btn_frame, 
     text="Export Traces", 
     font=("Arial", 10),
-    width=20,command=print_traces)
+    width=20,
+    command=print_traces)
 trace_btn.pack(side=tk.LEFT, padx=10)
 
 attractor_btn = tk.Button(
     analysis_btn_frame, 
     text="Export Attractors", 
     font=("Arial", 10),
-    width=20,    command=print_attractors)
+    width=20,
+    command=print_attractors)
 attractor_btn.pack(side=tk.LEFT, padx=10)
 
 # ------
