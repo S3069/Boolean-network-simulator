@@ -1,13 +1,6 @@
 Harsher input validation and error handling (for input function)
 
-split runAllTraces into two methods: one to run a trace from a starting state, and another to compile it.
 
-for UI:
-for detectAttractors (and runAllTraces), create parameters:
-- [cyclicOnly] optional checkbox to avoid point attractors (self loops). i.e. only search for cyclic attractors
-- [canonicalOrder] optional checkbox for canonical reordering (lowest binary state comes first in saved cycle), 
-- [maxDepth] optional max search depth (incorporate this as a 'flag' into the outputted dictionary)
--       ^ now must include truncated flag if the search depth >= maxDepth
 
 in compileAttractors:
 - make the runAllTraces call conditional. i.e. only call if it hasn't been ran previously.
@@ -15,10 +8,16 @@ in compileAttractors:
     ^ so probably need to return the conditions alongside the all_traces from runAllTraces.
 - Optional parameter: all_traces (if already ran, otherwise None)
 
+attractor/trace info:
+- add a note somewhere in the runAllTraces and detectAttractors TXT file+naming that states the settings for the run
+
 Make UI popup display windows for images and possibly text files.
 - From those display windows, add a save button.
+- also allow zooming and panning features
 
-fix compileAttractors logic. it is repeating the singular (cyclic) attractor in ExampleBoolNet1
+- consider using tk.LabelFrame. Figure out how
+
+FIX compileAttractors logic. it is repeating the singular (cyclic) attractor in ExampleBoolNet1
 ^ when attractor detection runs, it runs with default canonicalOrder parameter (i.e. False), so the singular cycle gets identified as two cycles because of their differing starting points
 ^ perhaps keep a canonical list of seen attractors alongside the list of found attractors. when a new attractor matches a seen attractor, grab the index of the seen attractor and save the start_state to the basin of that index within the known attractors.
 
@@ -37,3 +36,22 @@ Code: Additional parameters for detectAttractors and runAllTraces
 "Save to file" functions
 
 UI buttons: make functional
+
+attractor info:
+- add more variables to the output.
+- SAVE THE ADDITIONAL VARIABLES TO saveAttractorsToFile
+
+for UI:
+for detectAttractors (and runAllTraces), create parameters:
+- [cyclicOnly] optional checkbox to avoid point attractors (self loops). i.e. only search for cyclic attractors
+- [canonicalOrder] optional checkbox for canonical reordering (lowest binary state comes first in saved cycle), 
+- [maxDepth] optional max search depth (incorporate this as a 'flag' into the outputted dictionary)
+-       ^ now must include truncated flag if the search depth >= maxDepth
+- input validation on maxDepth
+
+
+-------------------------------------------------------------------------------------------
+
+NOT IMPLEMENTING:
+
+split runAllTraces into two methods: one to run a trace from a starting state, and another to compile it.
