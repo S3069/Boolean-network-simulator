@@ -80,7 +80,7 @@ def print_traces():
             state_trans,
             cyclicOnly = cyclic_var.get(),
             canonicalOrder = canonical_var.get(),
-            depth = get_depth()
+            maxDepth = get_depth()
             )
         saveTracesToFile(traces, filepath)
 
@@ -90,7 +90,7 @@ def print_attractors():
             state_trans,
             cyclicOnly = cyclic_var.get(),
             canonicalOrder = canonical_var.get(),
-            depth = get_depth()
+            maxDepth = get_depth()
             )
         saveAttractorsToFile(attractors, filepath)
 
