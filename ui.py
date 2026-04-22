@@ -68,11 +68,13 @@ def load_network():
 
 def draw_wiring_diagram():
     if G is not None:
-        drawWiringDiagram(G, filepath)
+        message = drawWiringDiagram(G, filepath)
+        setStatus(message)
 
 def draw_state_diagram():
     if state_trans is not None:
-        drawStateGraph(state_trans, filepath)
+        message = drawStateGraph(state_trans, filepath)
+        setStatus(message)
 
 def print_traces():
     if state_trans is not None:
@@ -82,7 +84,9 @@ def print_traces():
             canonicalOrder = canonical_var.get(),
             maxDepth = get_depth()
             )
-        saveTracesToFile(traces, filepath)
+        
+        message = saveTracesToFile(traces, filepath)
+        setStatus(message)
 
 def print_attractors():
     if state_trans is not None:
@@ -92,7 +96,9 @@ def print_attractors():
             canonicalOrder = canonical_var.get(),
             maxDepth = get_depth()
             )
-        saveAttractorsToFile(attractors, filepath)
+        
+        message = saveAttractorsToFile(attractors, filepath)
+        setStatus(message)
 
 # ------
 # Depth validation functions
@@ -122,6 +128,14 @@ def get_depth():
         return value
     except (tk.TclError, ValueError):
         return default_depth
+
+
+# ------
+# Status update function
+# ------
+
+def setStatus(message):
+    status_label.config(text=message)
 
 # ------
 # UI Window

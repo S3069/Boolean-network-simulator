@@ -1,3 +1,4 @@
+from fileinput import filename
 from inspect import trace
 from pathlib import Path
 
@@ -27,6 +28,8 @@ def drawDiagram(graph, filename, new_extension):
 
     png_name = replaceExtension(filename, new_extension)    # Renames file to match input file
     A.draw(png_name)
+
+    return png_name
 
 
 # ------
@@ -255,7 +258,10 @@ def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDe
 # ------
 
 def drawWiringDiagram(G, filename):
-    drawDiagram(G, filename, "_WiringDiagram.png")
+    filelocation = drawDiagram(G, filename, "_WiringDiagram.png")
+
+    message = f"Wiring diagram saved to {filelocation}."
+    return message
 
 def drawStateGraph(state_trans, filename):
     SG = nx.DiGraph()               # Create a directed graph to represent the state transition graph
@@ -263,7 +269,10 @@ def drawStateGraph(state_trans, filename):
     for state, next_state in state_trans.items():
         SG.add_edge(state, next_state)
 
-    drawDiagram(SG, filename, "_StateGraph.png")
+    filelocation = drawDiagram(SG, filename, "_StateGraph.png")
+
+    message = f"State transition graph saved to {filelocation}."
+    return message
 
 
 # ------
@@ -279,7 +288,8 @@ def saveTracesToFile(all_traces, filename=""):
         for start_state, trace_info in all_traces.items():
             file.write(f"{start_state}: " + " -> ".join(trace_info["trace"]) + "\n")
 
-    print(f"Traces saved to {filename}")
+    message = f"Traces saved to {filename}."
+    return message
     
 def saveAttractorsToFile(attractors, filename=""):
     filename = replaceExtension(filename, "_Attractors.txt")    # Renames file to match input file
@@ -305,5 +315,5 @@ def saveAttractorsToFile(attractors, filename=""):
                 file.write(f"Basin states: {', '.join(info['basin'])}\n")
                 file.write("\n")
 
-
-    print(f"Attractors saved to {filename}")
+    message = f"Attractors saved to {filename}."
+    return message
