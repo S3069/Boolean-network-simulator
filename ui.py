@@ -151,7 +151,7 @@ canonical_var = tk.BooleanVar(value=False)
 depth_var = tk.IntVar(value=10000)
 valid_depth_command = root.register(validate_depth)
 
-# ----- File Selection area -----
+# ----- (LEFT) File Selection area -----
 top_frame = tk.Frame(left_frame)
 top_frame.pack(pady=20)
 
@@ -172,10 +172,10 @@ load_btn = tk.Button(
     command=load_network)
 load_btn.pack(pady=10)
 
-# ----- Actions Frame -----
+# ----- (LEFT) Actions Frame -----
 action_frame = tk.Frame(left_frame)
 
-# --- Visual Selection ---
+# -- (LEFT) Visual Selection --
 visual_frame = tk.Frame(action_frame)
 visual_frame.pack(pady=10)
 
@@ -210,7 +210,7 @@ state_btn = tk.Button(
 )
 state_btn.pack(side=tk.LEFT, padx=10)
 
-# --- Analysis Selection ---
+# -- (LEFT) Analysis Selection --
 analysis_frame = tk.Frame(action_frame)
 analysis_frame.pack(pady=10)
 
@@ -232,14 +232,14 @@ cyclic_checkbox = tk.Checkbutton(
     text="Cyclic Attractors Only", 
     variable=cyclic_var
 )
-cyclic_checkbox.pack(anchor="w")
+cyclic_checkbox.pack(anchor="w")    # left align
 
 canonical_checkbox = tk.Checkbutton(
     settings_frame, 
     text="Use canonical ordering", 
     variable=canonical_var
 )
-canonical_checkbox.pack(anchor="w")
+canonical_checkbox.pack(anchor="w")   # left align
 
 # Settings: Max Depth
 depth_frame = tk.Frame(settings_frame)
@@ -279,6 +279,24 @@ attractor_btn = tk.Button(
     width=20,
     command=print_attractors)
 attractor_btn.pack(side=tk.LEFT, padx=10)
+
+
+# ----- (RIGHT) Status Frame -----
+status_title = tk.Label(
+    right_frame,
+    text="Status:",
+    font=("Arial", 11, "bold"),
+)
+status_title.pack(anchor="nw", pady=(20, 10))    # top left align
+
+status_label = tk.Label(
+    right_frame,
+    text="No file loaded.",
+    anchor="nw",
+    justify=tk.LEFT,
+    wraplength=280
+)
+status_label.pack(anchor="nw", pady=(0, 10), fill=tk.BOTH)    # top left align
 
 # ------
 # Run
