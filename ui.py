@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 import os
-from SimpleSim import (
+from boolean_network_simulator import (
     loadNetworkFromFile, 
     drawWiringDiagram, 
     compileStateTransitions, 
