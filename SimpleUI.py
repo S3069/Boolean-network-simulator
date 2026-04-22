@@ -219,12 +219,12 @@ depth_frame.pack(pady=5)
 depth_label = tk.Label(depth_frame, text="Max Trace Depth:")
 depth_label.pack(side=tk.LEFT, padx=(0, 5))
 
-depth_entry = tk.Entry(
+depth_entry = tk.Spinbox(
     depth_frame,
+    from_=1,
+    to=1000000,
     textvariable=max_depth_var,
     width=10,
-    validate="key",
-    validatecommand=(valid_md_command, "%P")
 )
 depth_entry.pack(side=tk.LEFT)
 
