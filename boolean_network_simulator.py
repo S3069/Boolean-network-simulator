@@ -217,6 +217,7 @@ def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDe
         maxDepth=maxDepth)
 
     attractors = {}
+    seen_canon_attractors = {}
     attractor_id = 1
 
     for start_state, trace_info in all_traces.items():
@@ -224,29 +225,27 @@ def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDe
         if trace_info["truncated"] or trace_info["attractor"] is None:
             continue
 
-        trace_attractor = trace_info["attractor"]
-
-        '''
-            TODO: Find a way to compare non-canonical cycles for uniqueness while storing them in an optional non-canonical order.
-            TODO: to attractor info: add ID? add states of attractors?
-        '''
+        trace_attractor = tuple(trace_info["attractor"])
+        canon_trace_attractor = tuple(canonicalReorder(list(trace_attractor)))
         
         # Compare canonical order of attractor to ensure uniqueness
-        compare_attractor = tuple(canonicalReorder(trace_attractor))
-        
-        if compare_attractor not in attractors:
+        if canon_trace_attractor not in seen_canon_attractors:
+            # Store unique attractor for future comparisons
+            seen_canon_attractors[canon_trace_attractor] = trace_attractor
+
             # Add desired attractor information
-            attractors[compare_attractor] = {
+            attractors[trace_attractor] = {
                 "id": attractor_id,
-                "states": sorted(list(compare_attractor)),
-                "length": len(compare_attractor),
-                "type": "Cyclic" if len(compare_attractor) > 1 else "Fixed Point",
+                "states": sorted(list(trace_attractor)),
+                "length": len(trace_attractor),
+                "type": "Cyclic" if len(trace_attractor) > 1 else "Fixed Point",
                 "basin": [start_state],
             }
             attractor_id += 1
         else:
             # If attractor already exists, add the starting state to its basin
-            attractors[compare_attractor]["basin"].append(start_state)
+            existing_attractor = seen_canon_attractors[canon_trace_attractor]
+            attractors[existing_attractor]["basin"].append(start_state)
 
     return attractors
 
