@@ -44,6 +44,8 @@ def select_file():
         action_frame.pack_forget()
         load_btn.pack(pady=10)
 
+        setStatus(f"File selected: {filepath}")
+
 # ------
 # Button functions
 # ------
@@ -55,6 +57,10 @@ def load_network():
     if not filepath:
         return
     
+    '''
+    TODO: Add error handling for invalid file formats, and display error messages in the status box.
+    '''
+    
     # Load the network and compile state transitions
     G = loadNetworkFromFile(filepath)
     state_trans = compileStateTransitions(G)
@@ -64,6 +70,9 @@ def load_network():
 
     # Show command buttons
     action_frame.pack(pady=20)
+
+    setStatus(f"File loaded: {filepath}")
+
     
 
 def draw_wiring_diagram():
