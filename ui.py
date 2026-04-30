@@ -44,12 +44,7 @@ def select_file():
         file_entry.insert(0, file_name) 
         
         # Resets UI to show load button and hide further functions
-        action_frame.pack_forget()
-        load_btn.pack(pady=10)
-        wiring_diagram_title.pack_forget()
-        wiring_diagram_img.config(image="") 
-        wiring_diagram_img.pack_forget()
-
+        resetUI()
         setStatus(f"File selected: {filepath}")
 
 # ------
@@ -71,19 +66,11 @@ def load_network():
     G = loadNetworkFromFile(filepath)
     state_trans = compileStateTransitions(G)
 
+    # Create the wiring diagram
     image_bytes = getGraphImageBytes(G)
     wiring_diagram = resize_image_bytes(image_bytes)
 
-    # Display the wiring diagram on the right side
-    wiring_diagram_title.pack(anchor="nw", pady=(20, 10))
-    wiring_diagram_img.config(image=wiring_diagram)
-    wiring_diagram_img.pack()
-    wiring_diagram_img.image = wiring_diagram  # Keep a reference to prevent garbage collection
-
-    # Show action buttons, hide load button
-    load_btn.pack_forget()
-    action_frame.pack(pady=20)
-    
+    revealUI(wiring_diagram)
     setStatus(f"File loaded: {filepath}")
     
 
@@ -171,6 +158,30 @@ def resize_image_bytes(image_bytes, max_width=500, max_height=600):
 
     return ImageTk.PhotoImage(image)
 
+# ------
+# UI update functions
+# ------
+
+def resetUI():
+    # Hide action buttons, show load button
+    action_frame.pack_forget()
+    load_btn.pack(pady=10)
+
+    # Hide and clear wiring diagram
+    wiring_diagram_title.pack_forget()
+    wiring_diagram_img.config(image="") 
+    wiring_diagram_img.pack_forget()
+
+def revealUI(wiring_diagram):
+    # Show action buttons, hide load button
+    load_btn.pack_forget()
+    action_frame.pack(pady=20)
+
+    # Display the wiring diagram
+    wiring_diagram_title.pack(anchor="nw", pady=(20, 10))
+    wiring_diagram_img.config(image=wiring_diagram)
+    wiring_diagram_img.pack()
+    wiring_diagram_img.image = wiring_diagram  # Keep a reference to prevent garbage collection
 
 # ------
 # UI Window
@@ -275,21 +286,6 @@ analysis_label.pack(pady=(0, 10))
 settings_frame = tk.Frame(analysis_frame)
 settings_frame.pack(pady=5)
 
-# Settings: Checkbox Settings
-cyclic_checkbox = tk.Checkbutton(
-    settings_frame, 
-    text="Cyclic Attractors Only", 
-    variable=cyclic_var
-)
-cyclic_checkbox.pack(anchor="w")    # left align
-
-canonical_checkbox = tk.Checkbutton(
-    settings_frame, 
-    text="Use canonical ordering", 
-    variable=canonical_var
-)
-canonical_checkbox.pack(anchor="w")   # left align
-
 # Settings: Max Depth
 depth_frame = tk.Frame(settings_frame)
 depth_frame.pack(pady=5)
@@ -307,6 +303,21 @@ depth_spinbox = tk.Spinbox(
     validatecommand=(valid_depth_command, "%P")
 )
 depth_spinbox.pack(side=tk.LEFT)
+
+# Settings: Checkbox Settings
+cyclic_checkbox = tk.Checkbutton(
+    settings_frame, 
+    text="Cyclic Attractors Only", 
+    variable=cyclic_var
+)
+cyclic_checkbox.pack(anchor="w")    # left align
+
+canonical_checkbox = tk.Checkbutton(
+    settings_frame, 
+    text="Use canonical ordering", 
+    variable=canonical_var
+)
+canonical_checkbox.pack(anchor="w")   # left align
 
 # Buttons for analysis
 
