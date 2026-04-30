@@ -314,7 +314,7 @@ status_title.pack(anchor="nw", pady=(20, 10))    # top left align
 
 status_label = tk.Label(
     right_frame,
-    text="No file loaded.",
+    text="No file selected.",
     anchor="nw",
     justify=tk.LEFT,
     wraplength=280
