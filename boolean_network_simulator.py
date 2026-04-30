@@ -121,9 +121,6 @@ def loadNetworkFromFile(filename):
             for neighbour in node_neighbourhood:
                 G.add_edge(neighbour, node_letter)          # Add directed edge from neighbour to node
 
-    # Show Wiring Diagram
-    drawWiringDiagram(graph=G, filename=filename)
-
     return G
 
 
