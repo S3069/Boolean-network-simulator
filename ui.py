@@ -44,8 +44,9 @@ def select_file():
         # Resets UI to show load button and hide further functions
         action_frame.pack_forget()
         load_btn.pack(pady=10)
-        diagram_label.config(image="")
-        diagram_label.pack_forget()
+        wiring_diagram_title.pack_forget()
+        wiring_diagram_img.config(image="") 
+        wiring_diagram_img.pack_forget()
 
         setStatus(f"File selected: {filepath}")
 
@@ -72,9 +73,10 @@ def load_network():
     wiring_diagram = tk.PhotoImage(data=image_bytes)
 
     # Display the wiring diagram in the right frame
-    diagram_label.pack(anchor="nw", pady=(20,10))
-    diagram_label.config(image=wiring_diagram)
-    diagram_label.image = wiring_diagram  # Keep a reference to prevent garbage collection
+    wiring_diagram_title.pack(anchor="nw", pady=(20, 10))
+    wiring_diagram_img.config(image=wiring_diagram)
+    wiring_diagram_img.pack()
+    wiring_diagram_img.image = wiring_diagram  # Keep a reference to prevent garbage collection
 
     # Show action buttons, hide load button
     load_btn.pack_forget()
@@ -332,11 +334,13 @@ status_label.pack(anchor="nw", pady=(0, 10), fill=tk.BOTH)    # top left align
 
 # ----- (RIGHT) Diagram Frame -----
 
-diagram_label = tk.Label(
+wiring_diagram_title = tk.Label(
     right_frame,
     text="Wiring diagram:",
     font=("Arial", 11, "bold")
 )
+
+wiring_diagram_img = tk.Label(right_frame)
 
 
 # ------
