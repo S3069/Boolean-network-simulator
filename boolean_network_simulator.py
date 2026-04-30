@@ -21,18 +21,21 @@ def replaceExtension(filename, new_extension):
 
     return new_filename
 
-def drawDiagram(graph, filename, new_extension, saveDiagram=True):
+def drawDiagram(graph, filename, new_extension):
     # Draw the graph using pygraphviz
     A = nx.nx_agraph.to_agraph(graph)
     A.layout(prog='dot')
 
     png_name = replaceExtension(filename, new_extension)    # Renames file to match input file
-    if saveDiagram:
-        A.draw(path=png_name, format='png')
-    else:
-        A.draw(format='png')
+    A.draw(path=png_name, format='png')
+
 
     return png_name
+
+def getGraphImageBytes(graph):
+    A = nx.nx_agraph.to_agraph(graph)
+    A.layout(prog='dot')
+    return A.draw(format='png')
 
 
 # ------
@@ -119,7 +122,7 @@ def loadNetworkFromFile(filename):
                 G.add_edge(neighbour, node_letter)          # Add directed edge from neighbour to node
 
     # Show Wiring Diagram
-    drawWiringDiagram(graph=G, filename=filename, saveDiagram=False)
+    drawWiringDiagram(graph=G, filename=filename)
 
     return G
 
@@ -263,28 +266,26 @@ def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDe
 # Draw Diagrams
 # ------
 
-def drawWiringDiagram(graph, filename, saveDiagram=True):
+def drawWiringDiagram(graph, filename):
     filelocation = drawDiagram(
         graph=graph,
         filename=filename, 
-        new_extension="_WiringDiagram.png", 
-        saveDiagram=saveDiagram)
+        new_extension="_WiringDiagram.png"
+    )
 
-    if saveDiagram:
-        message = f"Wiring diagram saved to {filelocation}."
-        return message
+    message = f"Wiring diagram saved to {filelocation}."
+    return message
 
-def drawStateGraph(state_trans, filename, saveDiagram=True):
+def drawStateGraph(graph, filename):
     SG = nx.DiGraph()               # Create a directed graph to represent the state transition graph
 
-    for state, next_state in state_trans.items():
+    for state, next_state in graph.items():
         SG.add_edge(state, next_state)
 
     filelocation = drawDiagram(
         graph=SG,
         filename=filename,
         new_extension="_StateGraph.png",
-        saveDiagram=saveDiagram
     )
 
     message = f"State transition graph saved to {filelocation}."
