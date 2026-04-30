@@ -4,12 +4,13 @@ import os
 from boolean_network_simulator import (
     loadNetworkFromFile, 
     drawWiringDiagram, 
-    compileStateTransitions, 
     drawStateGraph, 
-    compileAttractors, 
+    getGraphImageBytes,
+    compileStateTransitions, 
     runAllTraces, 
-    saveAttractorsToFile, 
-    saveTracesToFile
+    compileAttractors, 
+    saveTracesToFile,
+    saveAttractorsToFile
     )
 
 # Global variables
@@ -43,6 +44,8 @@ def select_file():
         # Resets UI to show load button and hide further functions
         action_frame.pack_forget()
         load_btn.pack(pady=10)
+        diagram_label.config(image="")
+        diagram_label.pack_forget()
 
         setStatus(f"File selected: {filepath}")
 
@@ -65,24 +68,30 @@ def load_network():
     G = loadNetworkFromFile(filepath)
     state_trans = compileStateTransitions(G)
 
-    # Hide load button
+    image_bytes = getGraphImageBytes(G)
+    wiring_diagram = tk.PhotoImage(data=image_bytes)
+
+    # Display the wiring diagram in the right frame
+    diagram_label.pack(anchor="nw", pady=(20,10))
+    diagram_label.config(image=wiring_diagram)
+    diagram_label.image = wiring_diagram  # Keep a reference to prevent garbage collection
+
+    # Show action buttons, hide load button
     load_btn.pack_forget()
-
-    # Show command buttons
     action_frame.pack(pady=20)
-
+    
     setStatus(f"File loaded: {filepath}")
 
     
 
 def draw_wiring_diagram():
     if G is not None:
-        message = drawWiringDiagram(graph=G, filename=filepath, saveDiagram=True)
+        message = drawWiringDiagram(graph=G, filename=filepath)
         setStatus(message)
 
 def draw_state_diagram():
     if state_trans is not None:
-        message = drawStateGraph(state_trans=state_trans, filename=filepath)
+        message = drawStateGraph(graph=state_trans, filename=filepath)
         setStatus(message)
 
 def print_traces():
@@ -152,7 +161,7 @@ def setStatus(message):
 
 root = tk.Tk()
 root.title("Boolean Network Simulator")
-root.geometry("1000x500")
+root.geometry("1300x800")
 
 # ----- Layout frames -----
 main_frame = tk.Frame(root)
@@ -164,7 +173,7 @@ left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 separator = tk.Frame(main_frame, width=2, bg="grey")
 separator.pack(side=tk.LEFT, fill=tk.Y, padx=10)
 
-right_frame = tk.Frame(main_frame, width=300)
+right_frame = tk.Frame(main_frame, width=500)
 right_frame.pack(side=tk.RIGHT, fill=tk.BOTH)
 right_frame.pack_propagate(False)  # Prevent frame from resizing to fit content
 
@@ -320,6 +329,15 @@ status_label = tk.Label(
     wraplength=280
 )
 status_label.pack(anchor="nw", pady=(0, 10), fill=tk.BOTH)    # top left align
+
+# ----- (RIGHT) Diagram Frame -----
+
+diagram_label = tk.Label(
+    right_frame,
+    text="Wiring diagram:",
+    font=("Arial", 11, "bold")
+)
+
 
 # ------
 # Run
