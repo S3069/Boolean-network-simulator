@@ -12,6 +12,8 @@ from boolean_network_simulator import (
     saveTracesToFile,
     saveAttractorsToFile
     )
+from PIL import Image, ImageTk
+from io import BytesIO
 
 # Global variables
 filepath = None
@@ -70,9 +72,9 @@ def load_network():
     state_trans = compileStateTransitions(G)
 
     image_bytes = getGraphImageBytes(G)
-    wiring_diagram = tk.PhotoImage(data=image_bytes)
+    wiring_diagram = resize_image_bytes(image_bytes)
 
-    # Display the wiring diagram in the right frame
+    # Display the wiring diagram on the right side
     wiring_diagram_title.pack(anchor="nw", pady=(20, 10))
     wiring_diagram_img.config(image=wiring_diagram)
     wiring_diagram_img.pack()
@@ -83,7 +85,6 @@ def load_network():
     action_frame.pack(pady=20)
     
     setStatus(f"File loaded: {filepath}")
-
     
 
 def draw_wiring_diagram():
@@ -157,13 +158,27 @@ def get_depth():
 def setStatus(message):
     status_label.config(text=message)
 
+
+# ------
+# Image resizer function
+# ------
+
+def resize_image_bytes(image_bytes, max_width=500, max_height=600):
+    image = Image.open(BytesIO(image_bytes))
+
+    # Resize the image while preserving aspect ratio
+    image.thumbnail((max_width, max_height))
+
+    return ImageTk.PhotoImage(image)
+
+
 # ------
 # UI Window
 # ------
 
 root = tk.Tk()
 root.title("Boolean Network Simulator")
-root.geometry("1300x800")
+root.geometry("1300x850")
 
 # ----- Layout frames -----
 main_frame = tk.Frame(root)
@@ -246,7 +261,7 @@ state_btn.pack(side=tk.LEFT, padx=10)
 
 # -- (LEFT) Analysis Selection --
 analysis_frame = tk.Frame(action_frame)
-analysis_frame.pack(pady=10)
+analysis_frame.pack(pady=(30, 10))
 
 analysis_label = tk.Label(
     analysis_frame,
