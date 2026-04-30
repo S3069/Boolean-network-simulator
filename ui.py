@@ -77,12 +77,12 @@ def load_network():
 
 def draw_wiring_diagram():
     if G is not None:
-        message = drawWiringDiagram(G, filepath)
+        message = drawWiringDiagram(graph=G, filename=filepath, saveDiagram=True)
         setStatus(message)
 
 def draw_state_diagram():
     if state_trans is not None:
-        message = drawStateGraph(state_trans, filepath)
+        message = drawStateGraph(state_trans=state_trans, filename=filepath)
         setStatus(message)
 
 def print_traces():
