@@ -18,6 +18,7 @@ dictionary.items() command from https://www.w3schools.com/python/ref_dictionary_
 for Tkinter UI:
 https://www.homeandlearn.uk/file-dialog-boxes.html
 https://realpython.com/python-gui-tkinter/
+for resizing/capping image dimensions using Pillow https://www.geeksforgeeks.org/python/how-to-resize-image-in-python-tkinter/
 
 for NetworkX graph system: https://networkx.org/documentation/stable/tutorial.html
 for NetworkX and Graphviz: https://stackoverflow.com/a/39662097
