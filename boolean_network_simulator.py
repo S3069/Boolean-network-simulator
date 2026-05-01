@@ -11,9 +11,20 @@ import pygraphviz as pgv
 # ------
 
 def replaceExtension(filename, new_extension):
-    # Source - https://stackoverflow.com/a/56807917
-    # Posted by Michael Hall, modified by community. See post 'Timeline' for change history
-    # Retrieved 2026-03-24, License - CC BY-SA 4.0
+    """
+    Replace the extension of a filename with a new extension, even if there are multiple extensions.
+
+    Inputs:
+    - filename: the original filename to be modified
+    - new_extension: the new extension to replace the original extension(s)
+
+    Output:
+    - new_filename: the modified filename with the new extension
+
+    Source - https://stackoverflow.com/a/56807917
+    Posted by Michael Hall, modified by community. See post 'Timeline' for change history
+    Retrieved 2026-03-24, License - CC BY-SA 4.0
+    """
 
     path = Path(filename)
     current_extensions = "".join(path.suffixes)             # Compile all extensions as a single string to replace
@@ -22,17 +33,36 @@ def replaceExtension(filename, new_extension):
     return new_filename
 
 def drawDiagram(graph, filename, new_extension):
+    """
+    Draw a diagram of the given graph using pygraphviz and save it as a PNG file with a name based on the input filename.
+    
+    Inputs:
+    - graph: a NetworkX graph object to be drawn
+    - filename: the original filename to base the output filename on
+    - new_extension: the new extension to replace the original extension(s) for the output file
+    
+    Output:
+    - filelocation: the location of the saved PNG file
+    """
     # Draw the graph using pygraphviz
     A = nx.nx_agraph.to_agraph(graph)
     A.layout(prog='dot')
 
-    png_name = replaceExtension(filename, new_extension)    # Renames file to match input file
-    A.draw(path=png_name, format='png')
+    png_path = replaceExtension(filename, new_extension)    # Renames file to match input file
+    A.draw(path=png_path, format='png')
 
-
-    return png_name
+    return png_path
 
 def getGraphImageBytes(graph):
+    """
+    Draw the graph using pygraphviz and return the image as bytes.
+
+    Input:
+    - graph: a NetworkX graph object to be drawn
+
+    Output:
+    - image_bytes: the image of the drawn graph in bytes format
+    """
     A = nx.nx_agraph.to_agraph(graph)
     A.layout(prog='dot')
     return A.draw(format='png')
@@ -43,7 +73,18 @@ def getGraphImageBytes(graph):
 # ------
 
 def nodeNextState(node, current_g_state, G, node_order):
+    """
+    Calculate the next state of a given node based on the current global state and the graph structure.
+
+    Inputs:
+    - node: the node for which to calculate the next state
+    - current_g_state: a binary string representing the current global state of the network
+    - G: the NetworkX graph representing the Boolean network
+    - node_order: a list of nodes in a consistent order to map to the global state string
     
+    Output:
+    - new_state: a binary character representing the next state of the specified node
+    """
     # Map the sorted nodes to the current global state in a dictionary
     state_map = {}
     for i, letter in enumerate(node_order):
@@ -62,7 +103,17 @@ def nodeNextState(node, current_g_state, G, node_order):
     return new_state
 
 def globalNextState(G, current_g_state, node_order):
+    """
+    Calculate the next global state based on the current global state and the graph structure.
     
+    Inputs:
+    - G: the NetworkX graph representing the Boolean network
+    - current_g_state: a binary string representing the current global state of the network
+    - node_order: a list of nodes in a consistent order to map to the global state string
+
+    Output:
+    - next_g_state: a binary string representing the next global state of the network
+    """
     # Find next state of each node and compile
     next_g_states = []
     for node in node_order:
@@ -77,6 +128,15 @@ def globalNextState(G, current_g_state, node_order):
 # ------
 
 def canonicalReorder(cycle):
+    """
+    Reorder a cycle of states to a canonical form (starting with the smallest state in the cycle).
+    
+    Inputs:
+    - cycle: a list of states representing a cyclical attractor
+
+    Output:
+    - canonical_cycle: the input cycle reordered to start with the smallest state
+    """
     # Remove duplicated starting/ending state
     if len(cycle) > 1 and cycle[0] == cycle[-1]:
         cycle = cycle[:-1]
@@ -94,6 +154,22 @@ def canonicalReorder(cycle):
 # ------
 
 def loadNetworkFromFile(filename):
+    """
+    Load a Boolean network from a file and create a directed graph representation.
+    
+    Input:
+    - filename: the name of the file containing the Boolean network definition. The file should have lines in the format:
+        
+        NodeLetter, Neighbour1 Neighbour2 ..., TruthTable.
+
+      For example:
+        A, B C, 0001
+        B, A, 01
+        C, A, 10
+
+    Output:
+    - G: a directed graph where each node has attributes 'truthtable', 'neighbours', and edges to represent the influence of neighbours on the node.
+    """
     # Create a directed graph to represent the Boolean network
     G = nx.DiGraph()            
 
@@ -129,6 +205,15 @@ def loadNetworkFromFile(filename):
 # ------
 
 def compileStateTransitions(G):
+    """
+    Compile the state transition graph for a given Boolean network graph.
+    
+    Input:
+    - G: a directed graph representing the Boolean network
+    
+    Output:
+    - state_trans: a dictionary representing the state transition graph, mapping each global state (as a binary string) to its next global state
+    """
     # Calculate the number of possible global states
     num_nodes = len(G.nodes)
     num_states = 2 ** num_nodes
@@ -152,6 +237,21 @@ def compileStateTransitions(G):
 # ------
 
 def runAllTraces(state_trans, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
+    """
+    Compile traces for all starting states in the state transition graph. Run each trace until a cycle is detected or max search depth is reached, and extract attractor information based on parameters.
+
+    Inputs:
+    - state_trans: a dictionary representing the state transition graph, mapping each global state (as a binary string) to its next global state
+    - cyclicOnly: a boolean flag indicating whether to only consider cyclic attractors (default: False)
+    - canonicalOrder: a boolean flag indicating whether to reorder cycles to a canonical form for comparison (default: False)
+    - maxDepth: an integer specifying the maximum search depth for each trace (default: 10000)
+
+    Output:
+    - all_traces: a dictionary mapping each starting state to its trace information, including
+        - "trace": the sequential list of states in the trace
+        - "truncated": a boolean indicating whether the trace was truncated due to reaching maxDepth
+        - "attractor": the attractor found in the trace (if any, otherwise None)
+    """
     all_traces = {}                 
 
     # For each possible starting state, run the trace until a cycle is detected or max search depth is reached
@@ -213,6 +313,24 @@ def runAllTraces(state_trans, cyclicOnly=False, canonicalOrder=False, maxDepth=1
 # ------
 
 def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDepth=10000):
+    """
+    Compile attractor information from the state transition graph based on the specified parameters.
+    
+    Inputs:
+    - state_trans: a dictionary representing the state transition graph, mapping each global state (as a binary string) to its next global state
+    - cyclicOnly: a boolean flag indicating whether to only consider cyclic attractors (default: False)
+    - canonicalOrder: a boolean flag indicating whether to reorder cycles to a canonical form for comparison (default: False)
+    - maxDepth: an integer specifying the maximum search depth for each trace (default: 10000)
+
+    Output:
+    - attractors: a dictionary mapping each unique attractor (as a tuple of states) to its information, including
+        - "id": a unique identifier for the attractor
+        - "states": a sorted list of states in the attractor
+        - "length": the length of the attractor (number of states in the cycle)
+        - "type": a string indicating the type of attractor ("Cyclic" or "Fixed Point")
+        - "basin": a list of starting states that lead to this attractor
+
+    """
 
     '''
     TODO: make it optional to run all_traces if this has already been run to save time when using the UI
@@ -264,6 +382,17 @@ def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDe
 # ------
 
 def drawWiringDiagram(graph, filename):
+    """
+    Draw a wiring diagram of the Boolean network graph using pygraphviz.
+
+    Inputs:
+    - graph: a NetworkX graph representing the Boolean network
+    - filename: the original filename to base the output filename on
+
+    Output:
+    - message: a string indicating where the wiring diagram was saved used for UI status updates
+    """
+
     filelocation = drawDiagram(
         graph=graph,
         filename=filename, 
@@ -274,6 +403,17 @@ def drawWiringDiagram(graph, filename):
     return message
 
 def drawStateGraph(graph, filename):
+    """
+    Draw a state transition graph of the Boolean network graph using pygraphviz.
+
+    Inputs:
+    - graph: a NetworkX graph representing the Boolean network
+    - filename: the original filename to base the output filename on
+
+    Output:
+    - message: a string indicating where the state transition graph was saved used for UI status updates
+    """
+        
     SG = nx.DiGraph()               # Create a directed graph to represent the state transition graph
 
     for state, next_state in graph.items():
@@ -294,6 +434,19 @@ def drawStateGraph(graph, filename):
 # ------
 
 def saveTracesToFile(all_traces, filename=""):
+    """
+    Save the traces for all starting states to a text file.
+    
+    Inputs:
+    - all_traces: a dictionary mapping each starting state to its trace information, including
+        - "trace": the sequential list of states in the trace
+        - "truncated": a boolean indicating whether the trace was truncated due to reaching maxDepth
+        - "attractor": the attractor found in the trace (if any, otherwise None)
+    - filename: the original filename to base the output filename on
+
+    Output:
+    - message: a string indicating where the traces were saved used for UI status updates
+    """
     filename = replaceExtension(filename, "_Traces.txt")    # Renames file to match input file
 
     with open(filename, "w") as file:
@@ -306,6 +459,21 @@ def saveTracesToFile(all_traces, filename=""):
     return message
     
 def saveAttractorsToFile(attractors, filename=""):
+    """
+    Save the attractor information to a text file.
+    
+    Inputs:
+    - attractors: a dictionary mapping each unique attractor (as a tuple of states) to its information, including
+        - "id": a unique identifier for the attractor
+        - "states": a sorted list of states in the attractor
+        - "length": the length of the attractor (number of states in the cycle)
+        - "type": a string indicating the type of attractor ("Cyclic" or "Fixed Point")
+        - "basin": a list of starting states that lead to this attractor
+    - filename: the original filename to base the output filename on
+
+    Output:
+    - message: a string indicating where the attractor information was saved used for UI status updates
+    """
     filename = replaceExtension(filename, "_Attractors.txt")    # Renames file to match input file
 
     with open(filename, "w") as file:
