@@ -29,6 +29,9 @@ default_depth = 10000
 # ------
 
 def select_file():
+    """
+    Open a file dialog to select a Boolean network file, and update the UI accordingly.
+    """
     global filepath
 
     filepath = filedialog.askopenfilename(
@@ -43,7 +46,7 @@ def select_file():
         file_entry.delete(0, tk.END)
         file_entry.insert(0, file_name) 
         
-        # Resets UI to show load button and hide further functions
+        # Resets UI to show load button and hide further features
         resetUI()
         setStatus(f"File selected: {filepath}")
 
@@ -52,6 +55,9 @@ def select_file():
 # ------
 
 def load_network():
+    """
+    Load the Boolean network from the selected file, compile state transitions, and update the UI with the wiring diagram.
+    """
     global G, state_trans
 
     # If no file is selected, do nothing
@@ -75,16 +81,25 @@ def load_network():
     
 
 def draw_wiring_diagram():
+    """
+    Draw the wiring diagram of the Boolean network, then update the status message.
+    """
     if G is not None:
         message = drawWiringDiagram(graph=G, filename=filepath)
         setStatus(message)
 
 def draw_state_diagram():
+    """
+    Draw the state diagram of the Boolean network, then update the status message.
+    """
     if state_trans is not None:
         message = drawStateGraph(graph=state_trans, filename=filepath)
         setStatus(message)
 
 def print_traces():
+    """
+    Run all traces of the Boolean network and save them to a file, then update the status message.
+    """
     if state_trans is not None:
         traces = runAllTraces(
             state_trans,
@@ -97,6 +112,9 @@ def print_traces():
         setStatus(message)
 
 def print_attractors():
+    """
+    Compile attractors from the Boolean network and save them to a file, then update the status message.
+    """
     if state_trans is not None:
         attractors = compileAttractors(
             state_trans,
@@ -108,11 +126,25 @@ def print_attractors():
         message = saveAttractorsToFile(attractors, filepath)
         setStatus(message)
 
+
 # ------
 # Depth validation functions
 # ------
 
 def validate_depth(value):
+    """
+    Validate the input for the depth spinbox to ensure it's a positive integer within the specified range. 
+    Values are set to:
+    - minimum of 1
+    - maximum of 1,000,000
+    - default of 10,000
+
+    Input:
+    - value: the input string from the spinbox
+
+    Output:
+    - True if the input is valid (empty string or a valid integer within range), False otherwise
+    """
     # Allow empty string (to allow user to clear the field)
     if value == "":
         return True
@@ -128,6 +160,12 @@ def validate_depth(value):
     return int(value)
 
 def get_depth():
+    """
+    Get the current value of the depth variable, ensuring it is within the valid range. If the value is invalid (e.g., non-integer, out of range), return the default depth.
+    
+    Output:
+    - The valid depth value from the spinbox, or the default depth if the input is invalid
+    """
     try:
         value = depth_var.get()
         if value < min_depth or value > max_depth:
@@ -143,6 +181,12 @@ def get_depth():
 # ------
 
 def setStatus(message):
+    """
+    Update the status label with the provided message.
+    
+    Input:
+    - message: the string message to display in the status label
+    """
     status_label.config(text=message)
 
 
@@ -151,6 +195,17 @@ def setStatus(message):
 # ------
 
 def resize_image_bytes(image_bytes, max_width=500, max_height=600):
+    """
+    Resize an image from bytes while preserving aspect ratio. Return a PhotoImage for Tkinter.
+    
+    Input:
+    - image_bytes: the image data in bytes format
+    - max_width: the maximum width for the resized image (default is 500 pixels)
+    - max_height: the maximum height for the resized image (default is 600 pixels)
+    
+    Output:
+    - A PhotoImage object that can be used in Tkinter to display the resized image
+    """
     image = Image.open(BytesIO(image_bytes))
 
     # Resize the image while preserving aspect ratio
@@ -158,11 +213,17 @@ def resize_image_bytes(image_bytes, max_width=500, max_height=600):
 
     return ImageTk.PhotoImage(image)
 
+
 # ------
 # UI update functions
 # ------
 
 def resetUI():
+    """
+    Reset the UI to the initial state after a new file is selected.
+
+    Hides action buttons and clears the wiring diagram.
+    """
     # Hide action buttons, show load button
     action_frame.pack_forget()
     load_btn.pack(pady=10)
@@ -173,6 +234,14 @@ def resetUI():
     wiring_diagram_img.pack_forget()
 
 def revealUI(wiring_diagram):
+    """
+    Reveal the action buttons and display the wiring diagram after a file is loaded.
+
+    Hides the load button.
+    
+    Input:
+    - wiring_diagram: a PhotoImage object representing the wiring diagram to be displayed
+    """
     # Show action buttons, hide load button
     load_btn.pack_forget()
     action_frame.pack(pady=20)
@@ -182,6 +251,7 @@ def revealUI(wiring_diagram):
     wiring_diagram_img.config(image=wiring_diagram)
     wiring_diagram_img.pack()
     wiring_diagram_img.image = wiring_diagram  # Keep a reference to prevent garbage collection
+
 
 # ------
 # UI Window
