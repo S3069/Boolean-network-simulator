@@ -44,12 +44,13 @@ def drawDiagram(graph, filename, new_extension):
     Output:
     - filelocation: the location of the saved PNG file
     """
-    # Draw the graph using pygraphviz
-    A = nx.nx_agraph.to_agraph(graph)
-    A.layout(prog='dot')
+    
+    image_bytes = getGraphImageBytes(graph)                 # Draw the graph and get the image as bytes
 
     png_path = replaceExtension(filename, new_extension)    # Renames file to match input file
-    A.draw(path=png_path, format='png')
+
+    with open(png_path, 'wb') as f:
+        f.write(image_bytes)
 
     return png_path
 
