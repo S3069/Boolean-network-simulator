@@ -432,7 +432,7 @@ status_label.pack(anchor="nw", pady=(0, 10), fill=tk.BOTH)    # top left align
 
 wiring_diagram_title = tk.Label(
     right_frame,
-    text="Wiring diagram:",
+    text="Loaded Network:",
     font=("Arial", 11, "bold")
 )
 
