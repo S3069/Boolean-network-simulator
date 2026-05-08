@@ -75,7 +75,7 @@ wiring_btn = tk.Button(
     text="Wiring Diagram", 
     font=("Arial", 10),
     width=20,
-    command=cmds.draw_wiring_diagram
+    command=cmds.show_popup_wiring_diagram
 )
 wiring_btn.pack(side=tk.LEFT, padx=10)
 
@@ -189,6 +189,7 @@ wiring_diagram_img = tk.Label(right_frame)
 # ----- Initialize UI Commands -----
 
 cmds.setup_ui(
+    root,
     file_entry,
     status_label,
     load_btn,
