@@ -12,6 +12,7 @@ class ImagePopup:
         - image_bytes: The image data as bytes.
         - title: The title for the popup window (default is "Diagram Viewer").
         - save_btn_command: The command to execute when the save button is clicked.
+
         Returns:
         - The popup window instance.
         """
@@ -80,3 +81,18 @@ class ImagePopup:
             self.canvas.delete("all")
             self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo)
             self.canvas.config(scrollregion=self.canvas.bbox(tk.ALL))
+
+def show_popup(root, image_bytes, title="Diagram Viewer", save_btn_command=None):
+    """
+    Show a popup window with the given image.
+
+    Inputs:
+    - root: The parent Tkinter window (the main application window).
+    - image_bytes: The image data as bytes.
+    - title: The title for the popup window (default is "Diagram Viewer").
+    - save_btn_command: The command to execute when the save button is clicked.
+
+    Returns:
+    - The popup window instance.
+    """
+    return ImagePopup(root, image_bytes, title, save_btn_command)
