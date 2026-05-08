@@ -1,11 +1,14 @@
 import tkinter as tk
+from PIL import Image, ImageTk
+from io import BytesIO
 
-def show_popup(parent, title="Diagram Viewer"):
+def show_popup(parent, image_bytes, title="Diagram Viewer"):
     """
     Show a popup window.
 
     Inputs:
     - parent: The parent Tkinter window (e.g., the main application window).
+    - image_bytes: The image data as bytes.
     - title: The title for the popup window (default is "Diagram Viewer").
 
     Returns:
@@ -17,7 +20,14 @@ def show_popup(parent, title="Diagram Viewer"):
     popup.geometry("800x600")
     
     popup.transient(parent)
-    popup.grab_set()            # Make the popup modal (block interaction with the main window). May remove this
+    popup.grab_set()                # Make the popup modal (block interaction with the main window). May remove this
+
+    image = Image.open(BytesIO(image_bytes))
+    photo = ImageTk.PhotoImage(image)
+
+    image_label = tk.Label(popup, image=photo)
+    image_label.image = photo       # Keep a reference to prevent garbage collection
+    image_label.pack(expand=True)
 
     close_button = tk.Button(popup, text="Close", command=popup.destroy)
     close_button.pack(pady=20)
