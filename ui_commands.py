@@ -9,9 +9,8 @@ from boolean_network_simulator import (
     createStateGraph, 
     getGraphImageBytes,
     getGraphSVGBytes,
-    saveWiringDiagram,
     saveWiringDiagramSVG,
-    saveStateGraph,
+    saveStateGraphSVG,
     compileStateTransitions, 
     runAllTraces, 
     compileAttractors, 
@@ -153,12 +152,14 @@ def show_popup_state_diagram():
     """
     if state_trans is not None:
         SG = createStateGraph(state_trans)
-        image_bytes = getGraphImageBytes(SG)
+        svg_bytes = getGraphSVGBytes(SG)
+
         show_popup(
             root=root,
-            image_bytes=image_bytes,
+            image_bytes=svg_bytes,
             title="State Transition Diagram",
-            save_btn_command=lambda:setStatus(saveStateGraph(image_bytes=image_bytes, filename=filepath))
+            save_btn_command=lambda:setStatus(saveStateGraphSVG(svg_bytes=svg_bytes, filename=filepath)),
+            is_svg=True
         )
 
         message = f"State transition diagram opened in popup window."

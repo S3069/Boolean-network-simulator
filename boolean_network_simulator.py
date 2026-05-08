@@ -411,26 +411,6 @@ def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDe
 # Save Diagrams
 # ------
 
-def saveWiringDiagram(image_bytes, filename):
-    """
-    Save a wiring diagram to a file.
-
-    Inputs:
-    - image_bytes: The image data as bytes.
-    - filename: the original filename to base the output filename on
-
-    Output:
-    - message: a string stating the location of the saved diagram. Used for UI status updates
-    """
-
-    output_path = saveImageBytes(
-        image_bytes=image_bytes,
-        filename=filename,
-        new_extension="_WiringDiagram.png")
-
-    message = f"Wiring diagram saved to {output_path}."
-    return message
-
 def saveWiringDiagramSVG(svg_bytes, filename):
     """
     Save a wiring diagram in SVG format to a file.
@@ -451,12 +431,12 @@ def saveWiringDiagramSVG(svg_bytes, filename):
     message = f"Wiring diagram saved to {output_path}."
     return message
 
-def saveStateGraph(image_bytes, filename):
+def saveStateGraphSVG(svg_bytes, filename):
     """
     Save a state transition graph to a file.
 
     Inputs:
-    - image_bytes: The image data as bytes.
+    - svg_bytes: The SVG image data as bytes.
     - filename: the original filename to base the output filename on
 
     Output:
@@ -464,9 +444,9 @@ def saveStateGraph(image_bytes, filename):
     """
 
     output_path = saveImageBytes(
-        image_bytes=image_bytes,
+        image_bytes=svg_bytes,
         filename=filename,
-        new_extension="_StateGraph.png",
+        new_extension="_StateGraph.svg",
     )
 
     message = f"State transition graph saved to {output_path}."
