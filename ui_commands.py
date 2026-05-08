@@ -8,7 +8,9 @@ from boolean_network_simulator import (
     loadNetworkFromFile, 
     createStateGraph, 
     getGraphImageBytes,
+    getGraphSVGBytes,
     saveWiringDiagram,
+    saveWiringDiagramSVG,
     saveStateGraph,
     compileStateTransitions, 
     runAllTraces, 
@@ -131,12 +133,15 @@ def show_popup_wiring_diagram():
     Open the wiring diagram in a popup window, then update the status message.
     """
     if G is not None:
-        image_bytes = getGraphImageBytes(G)
+
+        svg_bytes = getGraphSVGBytes(G)
+
         show_popup(
             root=root,
-            image_bytes=image_bytes,
+            image_bytes=svg_bytes,
             title="Wiring Diagram",
-            save_btn_command=lambda:setStatus(saveWiringDiagram(image_bytes=image_bytes, filename=filepath))
+            save_btn_command=lambda:setStatus(saveWiringDiagramSVG(svg_bytes=svg_bytes, filename=filepath)),
+            is_svg=True
         )
 
         message = f"Wiring diagram opened in popup window."

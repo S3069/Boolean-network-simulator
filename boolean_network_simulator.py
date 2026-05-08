@@ -65,6 +65,20 @@ def getGraphImageBytes(graph):
     A.layout(prog='dot')
     return A.draw(format='png')
 
+def getGraphSVGBytes(graph):
+    """
+    Draw the graph using pygraphviz and return the image as SVG bytes.
+
+    Input:
+    - graph: a NetworkX graph object to be drawn
+
+    Output:
+    - svg_bytes: the image of the drawn graph in SVG bytes format
+    """
+    A = nx.nx_agraph.to_agraph(graph)
+    A.layout(prog='dot')
+    return A.draw(format='svg')
+
 def createStateGraph(state_trans):
     """
     Create a NetworkX graph object representing the state transition graph of the Boolean network.
@@ -413,6 +427,26 @@ def saveWiringDiagram(image_bytes, filename):
         image_bytes=image_bytes,
         filename=filename,
         new_extension="_WiringDiagram.png")
+
+    message = f"Wiring diagram saved to {output_path}."
+    return message
+
+def saveWiringDiagramSVG(svg_bytes, filename):
+    """
+    Save a wiring diagram in SVG format to a file.
+
+    Inputs:
+    - image_bytes: The SVG image data as bytes.
+    - filename: the original filename to base the output filename on
+
+    Output:
+    - message: a string stating the location of the saved diagram. Used for UI status updates
+    """
+
+    output_path = saveImageBytes(
+        image_bytes=svg_bytes,
+        filename=filename,
+        new_extension="_WiringDiagram.svg")
 
     message = f"Wiring diagram saved to {output_path}."
     return message

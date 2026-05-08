@@ -1,9 +1,10 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from io import BytesIO
+import cairosvg
 
 class ImagePopup: 
-    def __init__(self, root, image_bytes, title="Diagram Viewer", save_btn_command=None):
+    def __init__(self, root, image_bytes, title="Diagram Viewer", save_btn_command=None, is_svg=False):
         """
         Show a popup window.
 
@@ -12,6 +13,7 @@ class ImagePopup:
         - image_bytes: The image data as bytes.
         - title: The title for the popup window (default is "Diagram Viewer").
         - save_btn_command: The command to execute when the save button is clicked.
+        - is_svg: A boolean indicating whether the image data is in SVG format.
 
         Returns:
         - The popup window instance.
@@ -22,6 +24,7 @@ class ImagePopup:
         self.image_bytes = image_bytes
         self.title = title
         self.save_btn_command = save_btn_command
+        self.is_svg = is_svg
 
         # Create the popup window
         self.popup = tk.Toplevel(root)
@@ -30,8 +33,9 @@ class ImagePopup:
         self.popup.transient(root)  # Make the popup transient to the main window 
 
         # Set up image
-        self.image = Image.open(BytesIO(image_bytes))
         self.zoom_scale = 1.0
+        if not self.is_svg:
+            self.image = Image.open(BytesIO(image_bytes))
 
         # Create the UI elements
         self.create_widgets()
@@ -84,24 +88,34 @@ class ImagePopup:
         self.display_image()
 
     def display_image(self):
-        # Resize the image according to the current zoom scale
-        width, height = self.image.size
-        new_size = (int(width * self.zoom_scale), int(height * self.zoom_scale))
-        resized_image = self.image.resize(new_size)
-        self.photo = ImageTk.PhotoImage(resized_image)
+        if self.is_svg:
+            # Convert SVG bytes to PNG bytes using cairosvg
+            png_bytes = cairosvg.svg2png(
+                bytestring=self.image_bytes,
+                scale=self.zoom_scale
+            )
+            rendered_image = Image.open(BytesIO(png_bytes))
+        else:
+            # Resize the image according to the current zoom scale
+            width, height = self.image.size
+            new_size = (
+                int(width * self.zoom_scale),
+                int(height * self.zoom_scale)
+            )
+            rendered_image = self.image.resize(new_size)
+        
+        self.photo = ImageTk.PhotoImage(rendered_image)
 
         # Clear the canvas and display the new image
         self.canvas.delete("all")
 
-        canvas_width = self.canvas.winfo_width()
-        canvas_height = self.canvas.winfo_height()
-        x = max(canvas_width // 2, new_size[0] // 2)  # Center horizontally
-        y = max(canvas_height // 2, new_size[1] // 2)  # Center vertically
+        x = max(self.canvas.winfo_width() // 2, rendered_image.width // 2)  # Center horizontally
+        y = max(self.canvas.winfo_height() // 2, rendered_image.height // 2)  # Center vertically
 
         self.canvas.create_image(x, y, anchor=tk.CENTER, image=self.photo)
         self.canvas.config(scrollregion=self.canvas.bbox(tk.ALL))
 
-def show_popup(root, image_bytes, title="Diagram Viewer", save_btn_command=None):
+def show_popup(root, image_bytes, title="Diagram Viewer", save_btn_command=None, is_svg=False):
     """
     Show a popup window with the given image.
 
@@ -110,8 +124,8 @@ def show_popup(root, image_bytes, title="Diagram Viewer", save_btn_command=None)
     - image_bytes: The image data as bytes.
     - title: The title for the popup window (default is "Diagram Viewer").
     - save_btn_command: The command to execute when the save button is clicked.
-
+    - is_svg: A boolean indicating whether the image is an SVG.
     Returns:
     - The popup window instance.
     """
-    return ImagePopup(root, image_bytes, title, save_btn_command)
+    return ImagePopup(root, image_bytes, title, save_btn_command, is_svg)
