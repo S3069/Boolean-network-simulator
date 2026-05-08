@@ -86,7 +86,7 @@ class ImagePopup:
         # Resize the image according to the current zoom scale
         width, height = self.image.size
         new_size = (int(width * self.zoom_scale), int(height * self.zoom_scale))
-        resized_image = self.image.resize(new_size, Image.ANTIALIAS)
+        resized_image = self.image.resize(new_size)
         self.photo = ImageTk.PhotoImage(resized_image)
 
         # Clear the canvas and display the new image
