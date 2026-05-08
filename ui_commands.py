@@ -27,6 +27,8 @@ min_depth = 1
 max_depth = 1000000
 default_depth = 10000
 
+root = None
+
 # Widgets from ui_main that need to be accessed in commands
 file_entry=None
 status_label=None
@@ -40,6 +42,7 @@ canonical_var=None
 depth_var=None
 
 def setup_ui(
+        given_root,
         given_file_entry,
         given_status_label,
         given_load_btn,
@@ -50,10 +53,12 @@ def setup_ui(
         given_canonical_var,
         given_depth_var,
 ):
+    global root
     global file_entry, status_label, load_btn, action_frame
     global wiring_diagram_img, wiring_diagram_title
     global cyclic_var, canonical_var, depth_var
 
+    root = given_root
     file_entry = given_file_entry
     status_label = given_status_label
     load_btn = given_load_btn
@@ -120,12 +125,15 @@ def load_network():
     setStatus(f"File loaded: {filepath}")
     
 
-def draw_wiring_diagram():
+def show_popup_wiring_diagram():
     """
-    Draw the wiring diagram of the Boolean network, then update the status message.
+    Open the wiring diagram in a popup window, then update the status message.
     """
     if G is not None:
-        message = drawWiringDiagram(graph=G, filename=filepath)
+        image_bytes = getGraphImageBytes(G)
+        show_popup(root, image_bytes, title="Wiring Diagram")
+
+        message = f"Wiring diagram opened in popup window."
         setStatus(message)
 
 def draw_state_diagram():
