@@ -68,6 +68,24 @@ def getGraphImageBytes(graph):
     A.layout(prog='dot')
     return A.draw(format='png')
 
+def createStateGraph(state_trans):
+    """
+    Create a NetworkX graph object representing the state transition graph of the Boolean network.
+
+    Input:
+    - state_trans: a dictionary representing the state transition graph, mapping each global state (as a binary string) to its next global state
+
+    Output:
+    - SG: a NetworkX directed graph object representing the state transition graph
+    """
+        
+    SG = nx.DiGraph()               # Create a directed graph to represent the state transition graph
+
+    for state, next_state in state_trans.items():
+        SG.add_edge(state, next_state)
+
+    return SG
+
 
 # ------
 # Helper functions: Calculate next states
@@ -403,22 +421,19 @@ def drawWiringDiagram(graph, filename):
     message = f"Wiring diagram saved to {filelocation}."
     return message
 
-def drawStateGraph(graph, filename):
+def drawStateGraph(state_trans, filename):
     """
     Draw a state transition graph of the Boolean network graph using pygraphviz.
 
     Inputs:
-    - graph: a NetworkX graph representing the Boolean network
+    - state_trans: a dictionary representing the state transition graph, mapping each global state (as a binary string) to its next global state
     - filename: the original filename to base the output filename on
 
     Output:
     - message: a string indicating where the state transition graph was saved used for UI status updates
     """
         
-    SG = nx.DiGraph()               # Create a directed graph to represent the state transition graph
-
-    for state, next_state in graph.items():
-        SG.add_edge(state, next_state)
+    SG = createStateGraph(state_trans)
 
     filelocation = drawDiagram(
         graph=SG,
