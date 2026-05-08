@@ -36,7 +36,7 @@ class ImagePopup:
 
         # Create the UI elements
         self.create_widgets()
-        self.display_image()
+        self.popup.after(100, self.display_image)   # Delay image display to ensure canvas is properly initialized
 
     # Create buttons
     def create_widgets(self):
@@ -109,10 +109,22 @@ class ImagePopup:
             self.canvas.scan_dragto(event.x, event.y, gain=1)
 
     def display_image(self):
-        # Remember old center position before redrawing, relative to the current displayed image size
-        old_x = self.canvas.xview()[0]
-        old_y = self.canvas.yview()[0]
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+        
+        # Old center position before redrawing, relative to the current displayed window
+        if self.has_displayed_image:
+            old_left = self.canvas.canvasx(0)
+            old_top = self.canvas.canvasy(0)
+            old_centre_x = old_left + (canvas_width / 2)
+            old_centre_y = old_top + (canvas_height / 2)
 
+            old_relative_x = old_centre_x / self.image_width
+            old_relative_y = old_centre_y / self.image_height
+        else:
+            old_relative_x = 0.5
+            old_relative_y = 0.5
+        
         # Convert SVG bytes to PNG bytes using cairosvg
         png_bytes = cairosvg.svg2png(
             bytestring=self.svg_bytes,
@@ -127,16 +139,19 @@ class ImagePopup:
         # Clear the canvas and display the new image
         self.canvas.delete("all")
 
-        x = max(self.canvas.winfo_width() // 2, rendered_image.width // 2)  # Center horizontally
-        y = max(self.canvas.winfo_height() // 2, rendered_image.height // 2)  # Center vertically
+        x = max(canvas_width // 2, self.image_width // 2)  # Center horizontally
+        y = max(canvas_height // 2, self.image_height // 2)  # Center vertically
 
         self.canvas.create_image(x, y, anchor=tk.CENTER, image=self.photo)
         self.canvas.config(scrollregion=self.canvas.bbox(tk.ALL))
 
-        # Restore previous center position after redrawing
+        # Return to relative centre after zoom:
+        new_centre_x = old_relative_x * self.image_width
+        new_centre_y = old_relative_y * self.image_height
+
         if self.has_displayed_image:
-            self.canvas.xview_moveto(old_x)
-            self.canvas.yview_moveto(old_y)
+            self.canvas.xview_moveto(new_centre_x)
+            self.canvas.yview_moveto(new_centre_y)
         else:
             self.has_displayed_image = True
 
