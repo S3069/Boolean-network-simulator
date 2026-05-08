@@ -51,27 +51,6 @@ def saveImageBytes(image_bytes, filename, new_extension):
 
     return output_path
 
-def drawDiagram(graph, filename, new_extension):
-    """
-    TODO: delete this function. Replace solely with saveImageBytes and getGraphImageBytes in the UI commands.
-
-    Draw a diagram of the given graph using pygraphviz and save it as a PNG file with a name based on the input filename.
-    
-    Inputs:
-    - graph: a NetworkX graph object to be drawn
-    - filename: the original filename to base the output filename on
-    - new_extension: the new extension to replace the original extension(s) for the output file
-    
-    Output:
-    - filelocation: the location of the saved PNG file
-    """
-    
-    image_bytes = getGraphImageBytes(graph)                 # Draw the graph and get the image as bytes
-
-    png_path = saveImageBytes(image_bytes, filename, new_extension)   # Save the image bytes to a file and get the file location
-
-    return png_path
-
 def getGraphImageBytes(graph):
     """
     Draw the graph using pygraphviz and return the image as bytes.
@@ -415,51 +394,48 @@ def compileAttractors(state_trans, cyclicOnly=False, canonicalOrder=False, maxDe
 
 
 # ------
-# Draw Diagrams
+# Save Diagrams
 # ------
 
-def drawWiringDiagram(graph, filename):
+def saveWiringDiagram(image_bytes, filename):
     """
-    Draw a wiring diagram of the Boolean network graph using pygraphviz.
+    Save a wiring diagram to a file.
 
     Inputs:
-    - graph: a NetworkX graph representing the Boolean network
+    - image_bytes: The image data as bytes.
     - filename: the original filename to base the output filename on
 
     Output:
-    - message: a string indicating where the wiring diagram was saved used for UI status updates
+    - message: a string stating the location of the saved diagram. Used for UI status updates
     """
 
-    filelocation = drawDiagram(
-        graph=graph,
-        filename=filename, 
-        new_extension="_WiringDiagram.png"
-    )
+    output_path = saveImageBytes(
+        image_bytes=image_bytes,
+        filename=filename,
+        new_extension="_WiringDiagram.png")
 
-    message = f"Wiring diagram saved to {filelocation}."
+    message = f"Wiring diagram saved to {output_path}."
     return message
 
-def drawStateGraph(state_trans, filename):
+def saveStateGraph(image_bytes, filename):
     """
-    Draw a state transition graph of the Boolean network graph using pygraphviz.
+    Save a state transition graph to a file.
 
     Inputs:
-    - state_trans: a dictionary representing the state transition graph, mapping each global state (as a binary string) to its next global state
+    - image_bytes: The image data as bytes.
     - filename: the original filename to base the output filename on
 
     Output:
-    - message: a string indicating where the state transition graph was saved used for UI status updates
+    - message: a string stating the location of the saved diagram. Used for UI status updates
     """
-        
-    SG = createStateGraph(state_trans)
 
-    filelocation = drawDiagram(
-        graph=SG,
+    output_path = saveImageBytes(
+        image_bytes=image_bytes,
         filename=filename,
         new_extension="_StateGraph.png",
     )
 
-    message = f"State transition graph saved to {filelocation}."
+    message = f"State transition graph saved to {output_path}."
     return message
 
 
