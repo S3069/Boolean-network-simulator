@@ -32,6 +32,7 @@ class ImagePopup:
         self.image = Image.open(BytesIO(image_bytes))
         self.zoom_scale = 1.0
 
+        # Create the UI elements
         self.create_widgets()
 
         # Create buttons
@@ -42,40 +43,40 @@ class ImagePopup:
             self.btn_frame = tk.Frame(self.popup)
             self.btn_frame.pack(pady=10)
 
+            self.zoom_in_btn = tk.Button(
+                self.btn_frame,
+                text="Zoom In",
+                command=self.zoom_in
+            )
+            self.zoom_in_btn.pack(side=tk.LEFT, padx=5)
+
             if self.save_btn_command is not None:
                 self.save_btn = tk.Button(
                     self.btn_frame,
                     text="Save Diagram",
                     command=self.save_btn_command
                 )
-                self.save_btn.pack(side=tk.LEFT, pady=10)
+                self.save_btn.pack(side=tk.LEFT, pady=5)
 
             self.close_btn = tk.Button(
                 self.btn_frame,
                 text="Close",
                 command=self.popup.destroy
             )
-            self.close_btn.pack(side=tk.LEFT, pady=10)
-
-
-
-
-'''TODO: format the rest of code:'''
-################
+            self.close_btn.pack(side=tk.LEFT, pady=5)
     
+        def zoom_in(self):
+            self.zoom_scale *= 1.2  # Increase zoom scale by 20%
+            self.display_image()
 
-    image = Image.open(BytesIO(image_bytes))
-    photo = ImageTk.PhotoImage(image)
+        def display_image(self):
+            # Resize the image according to the current zoom scale
+            width, height = self.image.size
+            new_size = (int(width * self.zoom_scale), int(height * self.zoom_scale))
+            resized_image = self.image.resize(new_size, Image.ANTIALIAS)
+            self.photo = ImageTk.PhotoImage(resized_image)
 
-    image_label = tk.Label(popup, image=photo)
-    image_label.image = photo       # Keep a reference to prevent garbage collection
-    image_label.pack(expand=True)
-
-    btn_frame = tk.Frame(popup)
-    btn_frame.pack(pady=20)
-
-
-
-
-
-    return popup
+            # Clear the canvas and display the new image
+            self.canvas.delete("all")
+            self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo)
+            self.canvas.config(scrollregion=self.canvas.bbox(tk.ALL))
