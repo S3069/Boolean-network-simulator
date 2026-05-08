@@ -84,7 +84,7 @@ state_btn = tk.Button(
     text="State Transition Diagram", 
     font=("Arial", 10),
     width=20,
-    command=cmds.draw_state_diagram
+    command=cmds.show_popup_state_diagram
 )
 state_btn.pack(side=tk.LEFT, padx=10)
 

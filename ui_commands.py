@@ -7,7 +7,7 @@ from io import BytesIO
 from boolean_network_simulator import (
     loadNetworkFromFile, 
     drawWiringDiagram, 
-    drawStateGraph, 
+    createStateGraph, 
     getGraphImageBytes,
     compileStateTransitions, 
     runAllTraces, 
@@ -136,12 +136,16 @@ def show_popup_wiring_diagram():
         message = f"Wiring diagram opened in popup window."
         setStatus(message)
 
-def draw_state_diagram():
+def show_popup_state_diagram():
     """
-    Draw the state diagram of the Boolean network, then update the status message.
+    Open the state diagram in a popup window, then update the status message.
     """
     if state_trans is not None:
-        message = drawStateGraph(graph=state_trans, filename=filepath)
+        SG = createStateGraph(state_trans)
+        image_bytes = getGraphImageBytes(SG)
+        show_popup(root, image_bytes, title="State Transition Diagram")
+
+        message = f"State transition diagram opened in popup window."
         setStatus(message)
 
 def print_traces():
