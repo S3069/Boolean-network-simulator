@@ -137,10 +137,9 @@ def show_popup_wiring_diagram():
 
         show_popup(
             root=root,
-            image_bytes=svg_bytes,
+            svg_bytes=svg_bytes,
             title="Wiring Diagram",
-            save_btn_command=lambda:setStatus(saveWiringDiagramSVG(svg_bytes=svg_bytes, filename=filepath)),
-            is_svg=True
+            save_btn_command=lambda:setStatus(saveWiringDiagramSVG(svg_bytes=svg_bytes, filename=filepath))
         )
 
         message = f"Wiring diagram opened in popup window."
@@ -156,10 +155,9 @@ def show_popup_state_diagram():
 
         show_popup(
             root=root,
-            image_bytes=svg_bytes,
+            svg_bytes=svg_bytes,
             title="State Transition Diagram",
-            save_btn_command=lambda:setStatus(saveStateGraphSVG(svg_bytes=svg_bytes, filename=filepath)),
-            is_svg=True
+            save_btn_command=lambda:setStatus(saveStateGraphSVG(svg_bytes=svg_bytes, filename=filepath))
         )
 
         message = f"State transition diagram opened in popup window."
