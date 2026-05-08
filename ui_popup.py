@@ -2,7 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from io import BytesIO
 
-def show_popup(root, image_bytes, title="Diagram Viewer"):
+def show_popup(root, image_bytes, title="Diagram Viewer", save_btn_command=None):
     """
     Show a popup window.
 
@@ -10,7 +10,7 @@ def show_popup(root, image_bytes, title="Diagram Viewer"):
     - root: The parent Tkinter window (the main application window).
     - image_bytes: The image data as bytes.
     - title: The title for the popup window (default is "Diagram Viewer").
-
+    - save_btn_command: The command to execute when the save button is clicked.
     Returns:
     - The popup window instance.
     """
@@ -29,7 +29,14 @@ def show_popup(root, image_bytes, title="Diagram Viewer"):
     image_label.image = photo       # Keep a reference to prevent garbage collection
     image_label.pack(expand=True)
 
-    close_button = tk.Button(popup, text="Close", command=popup.destroy)
-    close_button.pack(pady=20)
+    btn_frame = tk.Frame(popup)
+    btn_frame.pack(pady=20)
+
+    if save_btn_command is not None:
+        save_button = tk.Button(btn_frame, text="Save Diagram", command=save_btn_command)
+        save_button.pack(side=tk.LEFT, pady=10)
+
+    close_button = tk.Button(btn_frame, text="Close", command=popup.destroy)
+    close_button.pack(side=tk.LEFT, pady=10)
 
     return popup

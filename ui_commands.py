@@ -6,9 +6,10 @@ from io import BytesIO
 
 from boolean_network_simulator import (
     loadNetworkFromFile, 
-    drawWiringDiagram, 
     createStateGraph, 
     getGraphImageBytes,
+    saveWiringDiagram,
+    saveStateGraph,
     compileStateTransitions, 
     runAllTraces, 
     compileAttractors, 
@@ -131,7 +132,12 @@ def show_popup_wiring_diagram():
     """
     if G is not None:
         image_bytes = getGraphImageBytes(G)
-        show_popup(root, image_bytes, title="Wiring Diagram")
+        show_popup(
+            root=root,
+            image_bytes=image_bytes,
+            title="Wiring Diagram",
+            save_btn_command=lambda:setStatus(saveWiringDiagram(image_bytes=image_bytes, filename=filepath))
+        )
 
         message = f"Wiring diagram opened in popup window."
         setStatus(message)
@@ -143,7 +149,12 @@ def show_popup_state_diagram():
     if state_trans is not None:
         SG = createStateGraph(state_trans)
         image_bytes = getGraphImageBytes(SG)
-        show_popup(root, image_bytes, title="State Transition Diagram")
+        show_popup(
+            root=root,
+            image_bytes=image_bytes,
+            title="State Transition Diagram",
+            save_btn_command=lambda:setStatus(saveStateGraph(image_bytes=image_bytes, filename=filepath))
+        )
 
         message = f"State transition diagram opened in popup window."
         setStatus(message)
