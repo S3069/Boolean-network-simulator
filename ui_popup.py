@@ -32,7 +32,6 @@ class ImagePopup:
 
         # Set up image
         self.zoom_scale = 1.0
-        self.has_displayed_image = False        # Clunky flag, used to centre the image on initial display
 
         # Create the UI elements
         self.create_widgets()
@@ -40,11 +39,38 @@ class ImagePopup:
 
     # Create buttons
     def create_widgets(self):
-        self.canvas = tk.Canvas(self.popup, bg="white")
-        self.canvas.pack(fill=tk.BOTH, expand=True)
-        
-        # self.canvas.bind("<Configure>", lambda event: self.display_image())  # Redraw image on canvas resize
-        self.canvas.bind("<ButtonPress-1>", self.pan_start)  # Start panning
+
+        # Setup frame for scroll bars and panning
+        self.viewer_frame = tk.Frame(self.popup)
+        self.viewer_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.canvas = tk.Canvas(self.viewer_frame, bg="white")
+
+        self.hori_scroll = tk.Scrollbar(
+            self.viewer_frame,
+            orient=tk.HORIZONTAL,
+            command=self.canvas.xview
+        )
+        self.vert_scroll = tk.Scrollbar(
+            self.viewer_frame,
+            orient=tk.VERTICAL,
+            command=self.canvas.yview
+        )
+
+        self.canvas.configure(
+            yscrollcommand=self.vert_scroll.set,
+            xscrollcommand=self.hori_scroll.set
+        )
+
+        self.canvas.grid(row=0, column=0, sticky="nsew")
+        self.vert_scroll.grid(row=0, column=1, sticky="ns")
+        self.hori_scroll.grid(row=1, column=0, sticky="ew")
+
+        self.viewer_frame.rowconfigure(0, weight=1)
+        self.viewer_frame.columnconfigure(0, weight=1)
+
+        # Panning binds
+        self.canvas.bind("<ButtonPress-1>", self.pan_start)
         self.canvas.bind("<B1-Motion>", self.pan_move)
 
         self.btn_frame = tk.Frame(self.popup)
@@ -109,22 +135,6 @@ class ImagePopup:
             self.canvas.scan_dragto(event.x, event.y, gain=1)
 
     def display_image(self):
-        canvas_width = self.canvas.winfo_width()
-        canvas_height = self.canvas.winfo_height()
-        
-        # Old center position before redrawing, relative to the current displayed window
-        if self.has_displayed_image:
-            old_left = self.canvas.canvasx(0)
-            old_top = self.canvas.canvasy(0)
-            old_centre_x = old_left + (canvas_width / 2)
-            old_centre_y = old_top + (canvas_height / 2)
-
-            old_relative_x = old_centre_x / self.image_width
-            old_relative_y = old_centre_y / self.image_height
-        else:
-            old_relative_x = 0.5
-            old_relative_y = 0.5
-        
         # Convert SVG bytes to PNG bytes using cairosvg
         png_bytes = cairosvg.svg2png(
             bytestring=self.svg_bytes,
@@ -138,22 +148,28 @@ class ImagePopup:
 
         # Clear the canvas and display the new image
         self.canvas.delete("all")
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
 
-        x = max(canvas_width // 2, self.image_width // 2)  # Center horizontally
-        y = max(canvas_height // 2, self.image_height // 2)  # Center vertically
+        # Keeps image centred if image > canvas. Otherwise adjusts relative to image
+        if self.image_width < canvas_width:
+            x = canvas_width // 2
+        else:
+            x = self.image_width // 2
+
+        if self.image_height < canvas_height:
+            y = canvas_height // 2
+        else:
+            y = self.image_height // 2    
 
         self.canvas.create_image(x, y, anchor=tk.CENTER, image=self.photo)
-        self.canvas.config(scrollregion=self.canvas.bbox(tk.ALL))
 
-        # Return to relative centre after zoom:
-        new_centre_x = old_relative_x * self.image_width
-        new_centre_y = old_relative_y * self.image_height
+        # Limits scroll to larger of the two
+        scroll_width = max(self.image_width, canvas_width)
+        scroll_height = max(self.image_height, canvas_height)
 
-        if self.has_displayed_image:
-            self.canvas.xview_moveto(new_centre_x)
-            self.canvas.yview_moveto(new_centre_y)
-        else:
-            self.has_displayed_image = True
+        self.canvas.config(scrollregion=(0, 0, scroll_width, scroll_height))
+
 
 def show_popup(root, svg_bytes, title="Diagram Viewer", save_btn_command=None):
     """
