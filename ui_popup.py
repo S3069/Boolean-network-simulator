@@ -7,6 +7,9 @@ def show_popup(parent, title="Diagram Viewer"):
     Inputs:
     - parent: The parent Tkinter window (e.g., the main application window).
     - title: The title for the popup window (default is "Diagram Viewer").
+
+    Returns:
+    - The popup window instance.
     """
     
     popup = tk.Toplevel(parent)
@@ -18,3 +21,5 @@ def show_popup(parent, title="Diagram Viewer"):
 
     close_button = tk.Button(popup, text="Close", command=popup.destroy)
     close_button.pack(pady=20)
+
+    return popup
