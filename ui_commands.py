@@ -16,6 +16,8 @@ from boolean_network_simulator import (
     saveAttractorsToFile
 )
 
+from ui_popup import show_popup
+
 # Global variables
 filepath = None
 G = None
