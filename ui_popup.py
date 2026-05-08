@@ -35,6 +35,7 @@ class ImagePopup:
 
         # Create the UI elements
         self.create_widgets()
+        self.display_image()
 
         # Create buttons
         def create_widgets(self):
@@ -50,6 +51,13 @@ class ImagePopup:
                 command=self.zoom_in
             )
             self.zoom_in_btn.pack(side=tk.LEFT, padx=5)
+
+            self.zoom_out_btn = tk.Button(
+                self.btn_frame,
+                text="Zoom Out",
+                command=self.zoom_out
+            )
+            self.zoom_out_btn.pack(side=tk.LEFT, padx=5)
 
             if self.save_btn_command is not None:
                 self.save_btn = tk.Button(
@@ -68,6 +76,10 @@ class ImagePopup:
     
         def zoom_in(self):
             self.zoom_scale *= 1.2  # Increase zoom scale by 20%
+            self.display_image()
+
+        def zoom_out(self):
+            self.zoom_scale /= 1.2  # Decrease zoom scale by 20%
             self.display_image()
 
         def display_image(self):
