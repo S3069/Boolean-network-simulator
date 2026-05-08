@@ -32,8 +32,29 @@ def replaceExtension(filename, new_extension):
 
     return new_filename
 
+def saveImageBytes(image_bytes, filename, new_extension):
+    """
+    Save image bytes to a file.
+
+    Inputs:
+    - image_bytes: the image data in bytes format
+    - filename: the path of the original network file. The output file name will be based on this.
+    - new_extension: the new extension that will replace the original extension(s) for the output file
+
+    Output:
+    - filelocation: the location of the saved file
+    """
+    output_path = replaceExtension(filename, new_extension)
+
+    with open(output_path, 'wb') as f:
+        f.write(image_bytes)
+
+    return output_path
+
 def drawDiagram(graph, filename, new_extension):
     """
+    TODO: delete this function. Replace solely with saveImageBytes and getGraphImageBytes in the UI commands.
+
     Draw a diagram of the given graph using pygraphviz and save it as a PNG file with a name based on the input filename.
     
     Inputs:
@@ -47,10 +68,7 @@ def drawDiagram(graph, filename, new_extension):
     
     image_bytes = getGraphImageBytes(graph)                 # Draw the graph and get the image as bytes
 
-    png_path = replaceExtension(filename, new_extension)    # Renames file to match input file
-
-    with open(png_path, 'wb') as f:
-        f.write(image_bytes)
+    png_path = saveImageBytes(image_bytes, filename, new_extension)   # Save the image bytes to a file and get the file location
 
     return png_path
 
