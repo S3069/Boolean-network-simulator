@@ -41,6 +41,7 @@ class ImagePopup:
     def create_widgets(self):
         self.canvas = tk.Canvas(self.popup, bg="white")
         self.canvas.pack(fill=tk.BOTH, expand=True)
+        self.canvas.bind("<Configure>", lambda event: self.display_image())  # Redraw image on canvas resize
 
         self.btn_frame = tk.Frame(self.popup)
         self.btn_frame.pack(pady=10)
@@ -91,7 +92,13 @@ class ImagePopup:
 
         # Clear the canvas and display the new image
         self.canvas.delete("all")
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo)
+
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+        x = max(canvas_width // 2, new_size[0] // 2)  # Center horizontally
+        y = max(canvas_height // 2, new_size[1] // 2)  # Center vertically
+
+        self.canvas.create_image(x, y, anchor=tk.CENTER, image=self.photo)
         self.canvas.config(scrollregion=self.canvas.bbox(tk.ALL))
 
 def show_popup(root, image_bytes, title="Diagram Viewer", save_btn_command=None):
