@@ -563,10 +563,6 @@ def saveAttractorsToFile(attractors, filename="", maxDepth=10000, cyclicOnly=Fal
 
         file.write(f"Attractors detected:\n\n")
 
-        '''
-        TODO: add settings for attractor detection/trace run to top of the file.
-        '''
-
         if not attractors:
             file.write("No attractors detected.\n")
 
