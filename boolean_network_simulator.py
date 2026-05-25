@@ -259,24 +259,24 @@ def loadNetworkFromFile(filename):
             }
 
     # Validate that all referenced neighbours are defined as nodes in the file
-    for node, properties in network_definitions.items():
-        for neighbour in properties["neighbourhood"]:
+    for node, node_properties in network_definitions.items():
+        for neighbour in node_properties["neighbourhood"]:
             if neighbour not in network_definitions:
                 raise ValueError(f"Undefined neighbour '{neighbour}' for node '{node}'. \nAll neighbours must be defined as nodes in the file.")
 
     # Add node definitions to new graph
     G = nx.DiGraph()  
 
-    for node_identifier, properties in network_definitions.items():
+    for node_identifier, node_properties in network_definitions.items():
         G.add_node(
             node_identifier,
-            node_neighbourhood = properties["neighbourhood"],
-            node_ttable = properties["truthtable"]
+            neighbours = node_properties["neighbourhood"],
+            truthtable = node_properties["truthtable"]
         )
     
     # Add edges to graph
-    for node_identifier, properties in network_definitions.items():
-        for neighbour in properties["neighbourhood"]:
+    for node_identifier, node_properties in network_definitions.items():
+        for neighbour in node_properties["neighbourhood"]:
             G.add_edge(neighbour, node_identifier)          # Add directed edge from neighbour to node
 
     return G
