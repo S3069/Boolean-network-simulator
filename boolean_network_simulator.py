@@ -211,7 +211,7 @@ def loadNetworkFromFile(filename):
             if len(line) == 0:
                 continue
 
-            # Check for 3 comma-separated values in the line
+            # Validate that there is 3 comma-separated values in the line
             split_up = line.split(",")
             if len(split_up) != 3:
                 raise ValueError(
@@ -219,13 +219,16 @@ def loadNetworkFromFile(filename):
                 )
             
             # Parse the line into node properties
-            node_letter, node_neighbourhood, node_ttable = split_up
-            node_letter = node_letter.upper().strip()
+            node_identifier, node_neighbourhood, node_ttable = split_up
+            node_identifier = node_identifier.upper().strip()
             node_neighbourhood = tuple(node_neighbourhood.upper().strip().split())
             node_ttable = node_ttable.strip()
 
-
-
+            # Validate the node identifier
+            if node_identifier == "":
+                raise ValueError(f"Missing node identifier on line {line_number}.")
+            if " " in node_identifier:
+                raise ValueError(f"Invalid node identifier on line {line_number}. \nNode identifiers cannot contain spaces.")
 
 
 
@@ -233,12 +236,12 @@ def loadNetworkFromFile(filename):
             # Validate the truthtable matches length of neighbourhood
             expected_length = 2**len(node_neighbourhood)
             if len(node_ttable) != expected_length:
-                raise ValueError(f"The truthtable does not match expected length for node {node_letter}.")
+                raise ValueError(f"The truthtable does not match expected length for node {node_identifier}.")
 
             # Add node and its properties to graph
-            G.add_node(node_letter, truthtable=node_ttable, neighbours=node_neighbourhood)  # Neighbourhood is added to preserve order for later state calculations
+            G.add_node(node_identifier, truthtable=node_ttable, neighbours=node_neighbourhood)  # Neighbourhood is added to preserve order for later state calculations
             for neighbour in node_neighbourhood:
-                G.add_edge(neighbour, node_letter)          # Add directed edge from neighbour to node
+                G.add_edge(neighbour, node_identifier)          # Add directed edge from neighbour to node
 
     return G
 
