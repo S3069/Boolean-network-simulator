@@ -204,18 +204,31 @@ def loadNetworkFromFile(filename):
     G = nx.DiGraph()            
 
     with open(filename, "r") as file:
-        for line in file:
+        for line_number, line in enumerate(file, start=1):
             line = line.strip()
 
             # Skip rest of loop for empty line(s) in file
             if len(line) == 0:
                 continue
+
+            # Check for 3 comma-separated values in the line
+            split_up = line.split(",")
+            if len(split_up) != 3:
+                raise ValueError(
+                    f"Invalid format on line {line_number}. \nEach line must use the format: NodeLetter, Neighbour1 Neighbour2 ..., TruthTable)"
+                )
             
             # Parse the line into node properties
-            node_letter, node_neighbourhood, node_ttable = line.split(",")
+            node_letter, node_neighbourhood, node_ttable = split_up
             node_letter = node_letter.upper().strip()
             node_neighbourhood = tuple(node_neighbourhood.upper().strip().split())
             node_ttable = node_ttable.strip()
+
+
+
+
+
+
 
             # Validate the truthtable matches length of neighbourhood
             expected_length = 2**len(node_neighbourhood)
