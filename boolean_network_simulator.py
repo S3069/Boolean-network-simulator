@@ -214,7 +214,7 @@ def loadNetworkFromFile(filename):
             # Validate that there is 3 comma-separated values in the line
             split_up = line.split(",")
             if len(split_up) != 3:
-                raise ValueError(f"Invalid format on line {line_number}. \nEach line must use the format: NodeLetter, Neighbour1 Neighbour2 ..., TruthTable)")
+                raise ValueError(f"Invalid format on line {line_number}. \n\nEach line must use the format: NodeLetter, Neighbour1 Neighbour2 ..., TruthTable)")
             
             # Parse the line into node properties
             node_identifier, node_neighbourhood, node_ttable = split_up
@@ -231,11 +231,11 @@ def loadNetworkFromFile(filename):
             
             # Node identifier contains spaces
             if " " in node_identifier:
-                raise ValueError(f"Invalid node identifier on line {line_number}. \nNode identifiers cannot contain spaces.")
+                raise ValueError(f"Invalid node identifier on line {line_number}. \n\nNode identifiers cannot contain spaces.")
             
             # Duplicate node identifier
             if node_identifier in network_definitions:
-                raise ValueError(f"Duplicate node identifier '{node_identifier}' on line {line_number}. \nEach node must have a unique identifier.")
+                raise ValueError(f"Duplicate node identifier '{node_identifier}' on line {line_number}. \n\nEach node must have a unique identifier.")
 
 
             # Validate the truthtable
@@ -246,12 +246,12 @@ def loadNetworkFromFile(filename):
 
             # Truthtable contains characters other than 0 and 1
             if any(char not in "01" for char in node_ttable):
-                raise ValueError(f"Invalid truthtable on line {line_number}. \nTruthtable must only contain '0' and '1's.")
+                raise ValueError(f"Invalid truthtable on line {line_number}. \n\nTruthtable must only contain '0' and '1's.")
 
             # Truthtable matches length of neighbourhood
             expected_length = 2**len(node_neighbourhood)
             if len(node_ttable) != expected_length:
-                raise ValueError(f"Invalid truthtable length on line {line_number}. \nTruthtable must have a length of 2^n where n is the number of neighbours. \nExpected length for node '{node_identifier}' with {len(node_neighbourhood)} neighbour(s) is {expected_length}.")
+                raise ValueError(f"Invalid truthtable length on line {line_number}. \n\nTruthtable must have a length of 2^n where n is the number of neighbours. \nExpected length for node '{node_identifier}' with {len(node_neighbourhood)} neighbour(s) is {expected_length}.")
 
             network_definitions[node_identifier] = {
                 "neighbourhood": node_neighbourhood,
@@ -262,7 +262,7 @@ def loadNetworkFromFile(filename):
     for node, node_properties in network_definitions.items():
         for neighbour in node_properties["neighbourhood"]:
             if neighbour not in network_definitions:
-                raise ValueError(f"Undefined neighbour '{neighbour}' for node '{node}'. \nAll neighbours must be defined as nodes in the file.")
+                raise ValueError(f"Undefined neighbour '{neighbour}' for node '{node}'. \n\nAll neighbours must be defined as nodes in the file.")
 
     # Add node definitions to new graph
     G = nx.DiGraph()  

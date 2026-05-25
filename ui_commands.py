@@ -81,10 +81,15 @@ def select_file():
     """
     global filepath
 
-    filepath = filedialog.askopenfilename(
-        title="Open File",
-        filetypes=(("Text Files", "*.txt"), ("All Files", "*.*"))
-    )
+    try:
+        filepath = filedialog.askopenfilename(
+            title="Open File",
+            filetypes=(("Text Files", "*.txt"), ("All Files", "*.*"))
+        )
+    
+    except Exception as error:
+        filepath = None
+        setStatus(f"Error selecting file: {error}")
     
     # If a file was selected, update the entry field and store the path
     if filepath:
@@ -135,6 +140,7 @@ def load_network():
         # Reset
         G = None
         state_trans = None
+        
         setStatus(f"Unexpected error while loading file: {error}")
     
 
