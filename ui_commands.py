@@ -111,20 +111,31 @@ def load_network():
     if not filepath:
         return
     
-    '''
-    TODO: Add error handling for invalid file formats, and display error messages in the status box.
-    '''
-    
-    # Load the network and compile state transitions
-    G = loadNetworkFromFile(filepath)
-    state_trans = compileStateTransitions(G)
+    try:
+        
+        # Load the network and compile state transitions
+        G = loadNetworkFromFile(filepath)
+        state_trans = compileStateTransitions(G)
 
-    # Create the wiring diagram
-    image_bytes = getGraphImageBytes(G)
-    wiring_diagram = resize_image_bytes(image_bytes)
+        # Create the wiring diagram
+        image_bytes = getGraphImageBytes(G)
+        wiring_diagram = resize_image_bytes(image_bytes)
 
-    revealUI(wiring_diagram)
-    setStatus(f"File loaded: {filepath}")
+        revealUI(wiring_diagram)
+        setStatus(f"File loaded: {filepath}")
+
+    except ValueError as error:
+        # Reset
+        G = None
+        state_trans = None
+
+        setStatus(f"Error loading file: {error}")
+
+    except Exception as error:
+        # Reset
+        G = None
+        state_trans = None
+        setStatus(f"Unexpected error while loading file: {error}")
     
 
 def show_popup_wiring_diagram():
