@@ -201,6 +201,7 @@ def loadNetworkFromFile(filename):
     - G: a directed graph where each node has attributes 'truthtable', 'neighbours', and edges to represent the influence of neighbours on the node.
     """
     # Create a directed graph to represent the Boolean network
+    network_definitions = {}
     G = nx.DiGraph()            
 
     with open(filename, "r") as file:
@@ -230,8 +231,9 @@ def loadNetworkFromFile(filename):
             if " " in node_identifier:
                 raise ValueError(f"Invalid node identifier on line {line_number}. \nNode identifiers cannot contain spaces.")
 
-
-
+            # Validate that there are no duplicate node identifiers
+            if node_identifier in network_definitions:
+                raise ValueError(f"Duplicate node identifier '{node_identifier}' on line {line_number}. \nEach node must have a unique identifier.")
 
             # Validate the truthtable matches length of neighbourhood
             expected_length = 2**len(node_neighbourhood)
