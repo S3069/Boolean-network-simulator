@@ -215,9 +215,7 @@ def loadNetworkFromFile(filename):
             # Validate that there is 3 comma-separated values in the line
             split_up = line.split(",")
             if len(split_up) != 3:
-                raise ValueError(
-                    f"Invalid format on line {line_number}. \nEach line must use the format: NodeLetter, Neighbour1 Neighbour2 ..., TruthTable)"
-                )
+                raise ValueError(f"Invalid format on line {line_number}. \nEach line must use the format: NodeLetter, Neighbour1 Neighbour2 ..., TruthTable)")
             
             # Parse the line into node properties
             node_identifier, node_neighbourhood, node_ttable = split_up
@@ -225,20 +223,39 @@ def loadNetworkFromFile(filename):
             node_neighbourhood = tuple(node_neighbourhood.upper().strip().split())
             node_ttable = node_ttable.strip()
 
+
             # Validate the node identifier
+
+            # Missing node identifier
             if node_identifier == "":
                 raise ValueError(f"Missing node identifier on line {line_number}.")
+            
+            # Node identifier contains spaces
             if " " in node_identifier:
                 raise ValueError(f"Invalid node identifier on line {line_number}. \nNode identifiers cannot contain spaces.")
-
-            # Validate that there are no duplicate node identifiers
+            
+            # Duplicate node identifier
             if node_identifier in network_definitions:
                 raise ValueError(f"Duplicate node identifier '{node_identifier}' on line {line_number}. \nEach node must have a unique identifier.")
 
-            # Validate the truthtable matches length of neighbourhood
+
+            # Validate the truthtable
+
+            # Missing truthtable
+            if node_ttable == "":
+                raise ValueError(f"Missing truthtable on line {line_number}.")
+
+            # Truthtable contains characters other than 0 and 1
+            if any(char not in "01" for char in node_ttable):
+                raise ValueError(f"Invalid truthtable on line {line_number}. \nTruthtable must only contain '0' and '1's.")
+
+            # matches length of neighbourhood
             expected_length = 2**len(node_neighbourhood)
             if len(node_ttable) != expected_length:
                 raise ValueError(f"The truthtable does not match expected length for node {node_identifier}.")
+
+
+
 
             # Add node and its properties to graph
             G.add_node(node_identifier, truthtable=node_ttable, neighbours=node_neighbourhood)  # Neighbourhood is added to preserve order for later state calculations
