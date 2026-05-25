@@ -202,13 +202,12 @@ def loadNetworkFromFile(filename):
     """
     # Create a directed graph to represent the Boolean network
     network_definitions = {}
-    G = nx.DiGraph()            
 
     with open(filename, "r") as file:
         for line_number, line in enumerate(file, start=1):
             line = line.strip()
 
-            # Skip rest of loop for empty line(s) in file
+            # Skip empty line(s) in file
             if len(line) == 0:
                 continue
 
@@ -254,13 +253,31 @@ def loadNetworkFromFile(filename):
             if len(node_ttable) != expected_length:
                 raise ValueError(f"Invalid truthtable length on line {line_number}. \nTruthtable must have a length of 2^n where n is the number of neighbours. \nExpected length for node '{node_identifier}' with {len(node_neighbourhood)} neighbour(s) is {expected_length}.")
 
+            network_definitions[node_identifier] = {
+                "neighbourhood": node_neighbourhood,
+                "truthtable": node_ttable
+            }
 
+    # Validate that all referenced neighbours are defined as nodes in the file
+    for node, properties in network_definitions.items():
+        for neighbour in properties["neighbourhood"]:
+            if neighbour not in network_definitions:
+                raise ValueError(f"Undefined neighbour '{neighbour}' for node '{node}'. \nAll neighbours must be defined as nodes in the file.")
 
+    # Add node definitions to new graph
+    G = nx.DiGraph()  
 
-            # Add node and its properties to graph
-            G.add_node(node_identifier, truthtable=node_ttable, neighbours=node_neighbourhood)  # Neighbourhood is added to preserve order for later state calculations
-            for neighbour in node_neighbourhood:
-                G.add_edge(neighbour, node_identifier)          # Add directed edge from neighbour to node
+    for node_identifier, properties in network_definitions.items():
+        G.add_node(
+            node_identifier,
+            node_neighbourhood = properties["neighbourhood"],
+            node_ttable = properties["truthtable"]
+        )
+    
+    # Add edges to graph
+    for node_identifier, properties in network_definitions.items():
+        for neighbour in properties["neighbourhood"]:
+            G.add_edge(neighbour, node_identifier)          # Add directed edge from neighbour to node
 
     return G
 
