@@ -168,14 +168,21 @@ def print_traces():
     Run all traces of the Boolean network and save them to a file, then update the status message.
     """
     if state_trans is not None:
+        max_depth = get_depth()
+        
+
         traces = runAllTraces(
             state_trans,
             cyclicOnly = cyclic_var.get(),
             canonicalOrder = canonical_var.get(),
-            maxDepth = get_depth()
+            maxDepth = max_depth
             )
         
-        message = saveTracesToFile(traces, filepath)
+        message = saveTracesToFile(
+            traces,
+            filepath,
+            maxDepth = max_depth
+            )
         setStatus(message)
 
 def print_attractors():
@@ -183,14 +190,24 @@ def print_attractors():
     Compile attractors from the Boolean network and save them to a file, then update the status message.
     """
     if state_trans is not None:
+        cyclic_only = cyclic_var.get()
+        canonical_order = canonical_var.get()
+        max_depth = get_depth()
+        
         attractors = compileAttractors(
             state_trans,
-            cyclicOnly = cyclic_var.get(),
-            canonicalOrder = canonical_var.get(),
-            maxDepth = get_depth()
+            cyclicOnly = cyclic_only,
+            canonicalOrder = canonical_order,
+            maxDepth = max_depth
             )
         
-        message = saveAttractorsToFile(attractors, filepath)
+        message = saveAttractorsToFile(
+            attractors,
+            filepath,
+            cyclicOnly = cyclic_only,
+            canonicalOrder = canonical_order,
+            maxDepth = max_depth
+            )
         setStatus(message)
 
 

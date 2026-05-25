@@ -457,7 +457,7 @@ def saveStateGraphSVG(svg_bytes, filename):
 # Save to File
 # ------
 
-def saveTracesToFile(all_traces, filename=""):
+def saveTracesToFile(all_traces, filename="", maxDepth=10000):
     """
     Save the traces for all starting states to a text file.
     
@@ -474,15 +474,18 @@ def saveTracesToFile(all_traces, filename=""):
     filename = replaceExtension(filename, "_Traces.txt")    # Renames file to match input file
 
     with open(filename, "w") as file:
+        file.write(f"Traces output settings:\n")
+        file.write(f"Max depth: {maxDepth}\n\n")
+
         file.write(f"Traces for each initial state:\n\n")
-            
+
         for start_state, trace_info in all_traces.items():
             file.write(f"{start_state}: " + " -> ".join(trace_info["trace"]) + "\n")
 
     message = f"Traces saved to {filename}."
     return message
     
-def saveAttractorsToFile(attractors, filename=""):
+def saveAttractorsToFile(attractors, filename="", maxDepth=10000, cyclicOnly=False, canonicalOrder=False):
     """
     Save the attractor information to a text file.
     
@@ -501,6 +504,11 @@ def saveAttractorsToFile(attractors, filename=""):
     filename = replaceExtension(filename, "_Attractors.txt")    # Renames file to match input file
 
     with open(filename, "w") as file:
+        file.write(f"Attractors output settings:\n")
+        file.write(f"Max depth: {maxDepth}\n")
+        file.write(f"Cyclic attractors only: {cyclicOnly}\n")
+        file.write(f"Canonical ordering: {canonicalOrder}\n\n")
+
         file.write(f"Attractors detected:\n\n")
 
         '''
