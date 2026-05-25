@@ -249,10 +249,10 @@ def loadNetworkFromFile(filename):
             if any(char not in "01" for char in node_ttable):
                 raise ValueError(f"Invalid truthtable on line {line_number}. \nTruthtable must only contain '0' and '1's.")
 
-            # matches length of neighbourhood
+            # Truthtable matches length of neighbourhood
             expected_length = 2**len(node_neighbourhood)
             if len(node_ttable) != expected_length:
-                raise ValueError(f"The truthtable does not match expected length for node {node_identifier}.")
+                raise ValueError(f"Invalid truthtable length on line {line_number}. \nTruthtable must have a length of 2^n where n is the number of neighbours. \nExpected length for node '{node_identifier}' with {len(node_neighbourhood)} neighbour(s) is {expected_length}.")
 
 
 
