@@ -19,6 +19,9 @@ for Tkinter UI:
 https://www.homeandlearn.uk/file-dialog-boxes.html
 https://realpython.com/python-gui-tkinter/
 for resizing/capping image dimensions using Pillow https://www.geeksforgeeks.org/python/how-to-resize-image-in-python-tkinter/
+for making popups: https://www.tutorialspoint.com/article/what-is-the-correct-way-to-implement-a-custom-popup-tkinter-dialog-box
+for panning images: https://stackoverflow.com/a/20646727
+using vectors (SVG) for popup display: https://bgstack15.wordpress.com/2019/07/13/display-svg-in-tkinter-python3/
 
 for NetworkX graph system: https://networkx.org/documentation/stable/tutorial.html
 for NetworkX and Graphviz: https://stackoverflow.com/a/39662097
