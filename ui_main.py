@@ -125,7 +125,7 @@ depth_spinbox.pack(side=tk.LEFT)
 # Settings: Checkbox Settings
 cyclic_checkbox = tk.Checkbutton(
     settings_frame, 
-    text="Cyclic Attractors Only", 
+    text="Cyclic attractors only", 
     variable=cyclic_var
 )
 cyclic_checkbox.pack(anchor="w")    # left align
