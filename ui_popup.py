@@ -106,7 +106,7 @@ class ImagePopup:
         self.close_btn.pack(side=tk.LEFT, pady=5)
 
     def zoom_in(self):
-        if self.zoom_scale < 5.0:  # Limit maximum zoom level
+        if self.zoom_scale < 7.0:  # Limit maximum zoom level to prevent crashing
             self.zoom_scale *= 1.5  # Increase zoom scale by 50%
             self.display_image()
 
