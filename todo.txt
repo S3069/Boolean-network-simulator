@@ -1,19 +1,10 @@
-Harsher input validation and error handling (for input function)
-Error handling for every function
-Error statuses and correctly reported messages
+FUTURE WORK:
 
 in compileAttractors:
 - make the runAllTraces call conditional. i.e. only call if it hasn't been ran previously.
 - and only skip running the call if the conditions/parameters match the ones when all_traces was previously ran
     ^ so probably need to return the conditions alongside the all_traces from runAllTraces.
 - Optional parameter: all_traces (if already ran, otherwise None)
-
-attractor/trace info:
-- add a note somewhere in the runAllTraces and detectAttractors TXT file+naming that states the settings for the run
-
-Make UI popup display windows for images and possibly text files.
-- From those display windows, add a save button.
-- also allow zooming and panning features
 
 
 
@@ -48,6 +39,20 @@ for detectAttractors (and runAllTraces), create parameters:
 FIX compileAttractors logic. it is repeating the singular (cyclic) attractor in ExampleBoolNet1
 ^ when attractor detection runs, it runs with default canonicalOrder parameter (i.e. False), so the singular cycle gets identified as two cycles because of their differing starting points
 ^ perhaps keep a canonical list of seen attractors alongside the list of found attractors. when a new attractor matches a seen attractor, grab the index of the seen attractor and save the start_state to the basin of that index within the known attractors.
+
+refactor code: split ui into multiple files
+
+Harsher input validation and error handling (for input function)
+Error handling for every function
+Error statuses and correctly reported messages
+
+Make UI popup display windows for images and possibly text files.
+- From those display windows, add a save button.
+- also allow zooming and panning features
+
+
+attractor/trace info:
+- add a note somewhere in the runAllTraces and detectAttractors TXT file+naming that states the settings for the run
 
 
 
